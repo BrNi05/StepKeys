@@ -1,0 +1,62 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "Generate Swagger Docs",
+      "type": "shell",
+      "command": "swag",
+      "args": [
+        "init",
+        "--generalInfo",
+        "main.go",
+        "--output",
+        "./docs"
+      ],
+      "options": {
+        "cwd": "${workspaceFolder}/server"
+      },
+      "problemMatcher": []
+    },
+    {
+      "label": "Build StepKeys",
+      "type": "shell",
+      "command": "go build -o ./server/stepkeys ./server",
+      "args": [],
+      "group": {
+        "kind": "build",
+        "isDefault": true
+      },
+      "problemMatcher": ["$go"],
+      "dependsOn": ["Generate Swagger Docs"]
+    },
+    {
+      "label": "Run StepKeys (Prod, POSIX)",
+      "type": "shell",
+      "command": "./server/stepkeys",
+      "group": "none",
+      "problemMatcher": ["$go"],
+      "dependsOn": ["Build StepKeys"]
+    },
+    {
+      "label": "Run StepKeys (Prod, Win)",
+      "type": "shell",
+      "command": "./server/stepkeys.exe",
+      "group": "none",
+      "problemMatcher": ["$go"],
+      "dependsOn": ["Build StepKeys"]
+    },
+    {
+      "label": "Clean (POSIX)",
+      "type": "shell",
+      "command": "rm -f stepkeys",
+      "group": "none",
+      "problemMatcher": []
+    },
+    {
+      "label": "Clean (Win)",
+      "type": "shell",
+      "command": "del /Q stepkeys.exe",
+      "group": "none"
+    }
+  ]
+}
