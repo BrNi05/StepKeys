@@ -1,0 +1,62 @@
+module stepkeys
+
+go 1.25.6
+
+require (
+	github.com/getlantern/systray v1.2.2
+	github.com/go-vgo/robotgo v1.0.0
+	github.com/joho/godotenv v1.5.1
+	github.com/pkg/browser v0.0.0-20240102092130-5ac0b6a4141c
+	github.com/swaggo/http-swagger v1.3.4
+	github.com/swaggo/swag v1.16.6
+	go.bug.st/serial v1.6.4
+)
+
+require (
+	github.com/KyleBanks/depth v1.2.1 // indirect
+	github.com/creack/goselect v0.1.2 // indirect
+	github.com/dblohm7/wingoes v0.0.0-20250822163801-6d8e6105c62d // indirect
+	github.com/ebitengine/purego v0.9.1 // indirect
+	github.com/gen2brain/shm v0.1.1 // indirect
+	github.com/getlantern/context v0.0.0-20190109183933-c447772a6520 // indirect
+	github.com/getlantern/errors v0.0.0-20190325191628-abdb3e3e36f7 // indirect
+	github.com/getlantern/golog v0.0.0-20190830074920-4ef2e798c2d7 // indirect
+	github.com/getlantern/hex v0.0.0-20190417191902-c6586a6fe0b7 // indirect
+	github.com/getlantern/hidden v0.0.0-20190325191715-f02dbb02be55 // indirect
+	github.com/getlantern/ops v0.0.0-20190325191751-d70cb0d6f85f // indirect
+	github.com/go-ole/go-ole v1.3.0 // indirect
+	github.com/go-openapi/jsonpointer v0.19.5 // indirect
+	github.com/go-openapi/jsonreference v0.20.0 // indirect
+	github.com/go-openapi/spec v0.20.6 // indirect
+	github.com/go-openapi/swag v0.19.15 // indirect
+	github.com/go-stack/stack v1.8.0 // indirect
+	github.com/godbus/dbus/v5 v5.2.0 // indirect
+	github.com/jezek/xgb v1.2.0 // indirect
+	github.com/josharian/intern v1.0.0 // indirect
+	github.com/lufia/plan9stats v0.0.0-20251013123823-9fd1530e3ec3 // indirect
+	github.com/mailru/easyjson v0.7.6 // indirect
+	github.com/otiai10/gosseract/v2 v2.4.1 // indirect
+	github.com/oxtoacart/bpool v0.0.0-20190530202638-03653db5a59c // indirect
+	github.com/power-devops/perfstat v0.0.0-20240221224432-82ca36839d55 // indirect
+	github.com/robotn/xgb v0.10.0 // indirect
+	github.com/robotn/xgbutil v0.10.0 // indirect
+	github.com/shirou/gopsutil/v4 v4.25.10 // indirect
+	github.com/swaggo/files v0.0.0-20220610200504-28940afbdbfe // indirect
+	github.com/tailscale/win v0.0.0-20250627215312-f4da2b8ee071 // indirect
+	github.com/tklauser/go-sysconf v0.3.16 // indirect
+	github.com/tklauser/numcpus v0.11.0 // indirect
+	github.com/vcaesar/gops v0.41.0 // indirect
+	github.com/vcaesar/imgo v0.41.0 // indirect
+	github.com/vcaesar/keycode v0.10.1 // indirect
+	github.com/vcaesar/screenshot v0.11.1 // indirect
+	github.com/vcaesar/tt v0.20.1 // indirect
+	github.com/yusufpapurcu/wmi v1.2.4 // indirect
+	golang.org/x/exp v0.0.0-20251125195548-87e1e737ad39 // indirect
+	golang.org/x/image v0.33.0 // indirect
+	golang.org/x/mod v0.30.0 // indirect
+	golang.org/x/net v0.47.0 // indirect
+	golang.org/x/sync v0.18.0 // indirect
+	golang.org/x/sys v0.40.0 // indirect
+	golang.org/x/tools v0.39.0 // indirect
+	gopkg.in/yaml.v2 v2.4.0 // indirect
+)
