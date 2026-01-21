@@ -38,3 +38,6 @@ go.work.sum
 pedals.json
 config.json
 StepKeys.log
+
+# Swagger generated files
+docs/
