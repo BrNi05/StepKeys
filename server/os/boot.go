@@ -8,8 +8,6 @@ import (
 	"os/user"
 	"path/filepath"
 	"runtime"
-
-	Config "stepkeys/server/config"
 )
 
 const name = "StepKeys"
@@ -72,7 +70,7 @@ func DisableStartOnBoot() error {
 
 // Windows: create shortcut in Startup folder
 func enableWindows() error {
-	cmd := fmt.Sprintf(`$s=(New-Object -COM WScript.Shell).CreateShortcut("%s");$s.TargetPath="%s";$s.Save()`, pathToStartipTrigger, Config.GetExecPath())
+	cmd := fmt.Sprintf(`$s=(New-Object -COM WScript.Shell).CreateShortcut("%s");$s.TargetPath="%s";$s.Save()`, pathToStartipTrigger, GetExecPath())
 	return exec.Command("powershell", "-Command", cmd).Run()
 }
 
@@ -86,7 +84,7 @@ func enableMac() error {
     <key>ProgramArguments</key><array><string>%s</string></array>
     <key>RunAtLoad</key><true/>
 </dict>
-</plist>`, name, Config.GetExecPath())
+</plist>`, name, GetExecPath())
 	return os.WriteFile(pathToStartipTrigger, []byte(content), 0644)
 }
 
@@ -100,6 +98,6 @@ NoDisplay=false
 X-GNOME-Autostart-enabled=true
 Name=%s
 Comment=Start %s on login
-`, Config.GetExecPath(), name, name)
+`, GetExecPath(), name, name)
 	return os.WriteFile(pathToStartipTrigger, []byte(content), 0644)
 }

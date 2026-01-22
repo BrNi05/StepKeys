@@ -7,11 +7,12 @@ import (
 	"path/filepath"
 
 	Config "stepkeys/server/config"
+	. "stepkeys/server/os"
 )
 
 // Serve the webGUI
 func StartGUI() {
-	webDir := filepath.Join(filepath.Dir(Config.GetExecPath()), "webgui")
+	webDir := filepath.Join(filepath.Dir(GetExecPath()), "webgui")
 
 	fs := http.FileServer(http.Dir(webDir))
 	http.Handle("/", fs)

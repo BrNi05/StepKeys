@@ -7,8 +7,8 @@ import (
 
 	Config "stepkeys/server/config"
 	Logging "stepkeys/server/logging"
-	OS "stepkeys/server/os"
 	Serial "stepkeys/server/serial"
+	Tray "stepkeys/server/tray"
 	Web "stepkeys/server/web"
 )
 
@@ -40,5 +40,5 @@ func main() {
 	}()
 
 	// Start tray menu
-	systray.Run(OS.TrayOnReady, OS.TrayOnExit)
+	systray.Run(Tray.TrayOnReady, Tray.TrayOnExit)
 }
