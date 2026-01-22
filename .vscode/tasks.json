@@ -32,31 +32,44 @@
     {
       "label": "Run StepKeys (Prod, POSIX)",
       "type": "shell",
-      "command": "./server/stepkeys",
+      "command": "./stepkeys",
       "group": "none",
       "problemMatcher": ["$go"],
-      "dependsOn": ["Build StepKeys"]
+      "dependsOn": ["Build StepKeys"],
+      "options": {
+        "cwd": "${workspaceFolder}/server"
+      }
     },
     {
       "label": "Run StepKeys (Prod, Win)",
       "type": "shell",
-      "command": "./server/stepkeys.exe",
+      "command": "./stepkeys.exe",
       "group": "none",
       "problemMatcher": ["$go"],
-      "dependsOn": ["Build StepKeys"]
+      "dependsOn": ["Build StepKeys"],
+      "options": {
+        "cwd": "${workspaceFolder}/server"
+      }
     },
     {
       "label": "Clean (POSIX)",
       "type": "shell",
       "command": "rm -f stepkeys",
       "group": "none",
-      "problemMatcher": []
+      "problemMatcher": [],
+      "options": {
+        "cwd": "${workspaceFolder}/server"
+      }
     },
     {
       "label": "Clean (Win)",
       "type": "shell",
       "command": "del /Q stepkeys.exe",
-      "group": "none"
+      "group": "none",
+      "problemMatcher": [],
+      "options": {
+        "cwd": "${workspaceFolder}/server"
+      }
     }
   ]
 }
