@@ -12,15 +12,17 @@ import (
 var serialPort string
 var baudRate int
 
-func LoadEnv() {
+func LoadEnv() (baudRate int, serialPort string) {
 	// Load .env file
 	// Ignore error if missing
 	_ = godotenv.Load(".env")
+	log.Println("Environment file loaded.")
 
 	// SERIAL_PORT
 	serialPort = os.Getenv("SERIAL_PORT")
 	if serialPort == "" {
 		serialPort = defaultSerialPort()
+		log.Println("Using default for SERIAL_PORT env var:", serialPort)
 	}
 
 	// BAUD_RATE
@@ -29,10 +31,14 @@ func LoadEnv() {
 			baudRate = val
 		} else {
 			baudRate = 115200
+			log.Println("Invalid BAUD_RATE env var, using default:", baudRate)
 		}
 	} else {
 		baudRate = 115200
+		log.Println("Using default for BAUD_RATE env var:", baudRate)
 	}
+
+	return baudRate, serialPort
 }
 
 // Fallback default per OS
@@ -48,14 +54,4 @@ func defaultSerialPort() string {
 		log.Fatal("Unsupported OS")
 		return ""
 	}
-}
-
-// Returns the baud rate
-func GetBaudRate() int {
-	return baudRate
-}
-
-// Returns the serial port
-func GetSerialPort() string {
-	return serialPort
 }

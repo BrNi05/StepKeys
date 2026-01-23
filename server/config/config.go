@@ -8,6 +8,7 @@ import (
 	"path/filepath"
 	"sync"
 
+	Handler "stepkeys/server/handler"
 	OS "stepkeys/server/os"
 	. "stepkeys/server/pedal"
 )
@@ -77,6 +78,7 @@ func initConfigFiles() {
 // Load config from file
 func LoadConfig() {
 	initConfigFiles()
+	log.Println("Loading app and pedal config...")
 
 	// Load app config
 	// Start on boot state is not enforced here, only on runtime toggle events
@@ -116,6 +118,8 @@ func saveAppConfig() {
 	data, _ := json.MarshalIndent(appConfig, "", "  ")
 	if err := os.WriteFile(appConfigFilePath, data, 0644); err != nil {
 		log.Println("Failed to save app config:", err)
+	} else {
+		log.Println("App config saved.")
 	}
 }
 
@@ -138,9 +142,13 @@ func ToggleEnabled() {
 
 	appConfig.Enabled = !appConfig.Enabled
 	stateSnapshot := appConfig.Enabled
-	appConfigMu.Unlock()
+	Handler.UpdateEnabled(stateSnapshot) // update handler copy
 
 	saveAppConfig() // make changes persistent
+
+	log.Println("StepKeys enable state was changed:", appConfig.Enabled)
+
+	appConfigMu.Unlock()
 
 	// Notify possible event subscribers
 	select {
@@ -163,7 +171,6 @@ func ToggleStartOnBoot() {
 	appConfigMu.Lock()
 	appConfig.StartOnBoot = !appConfig.StartOnBoot
 	startOnBootSnapshot := appConfig.StartOnBoot
-	appConfigMu.Unlock()
 
 	// Process changes
 	if IsStartOnBootEnabled() {
@@ -181,6 +188,10 @@ func ToggleStartOnBoot() {
 	}
 
 	saveAppConfig() // make changes persistent
+
+	log.Println("StepKeys start on boot state was changed:", appConfig.StartOnBoot)
+
+	appConfigMu.Unlock()
 
 	// Notify possible event subscribers
 	select {
@@ -203,6 +214,9 @@ func SetPedalMap(newMap PedalMap) {
 	defer pedalMapMu.Unlock()
 	pedalMap = newMap
 
+	// Update the pedal map copy in the handler package
+	Handler.UpdatePedalMap(newMap)
+
 	data, err := json.MarshalIndent(pedalMap, "", "  ")
 	if err != nil {
 		log.Println("Failed to encode pedal map:", err)
@@ -212,6 +226,8 @@ func SetPedalMap(newMap PedalMap) {
 	if err := os.WriteFile(pedalConfigFilePath, data, 0644); err != nil {
 		log.Println("Failed to save pedal config:", err)
 	}
+
+	log.Println("Pedal map updated and saved.")
 }
 
 // Returns a copy of the pedal map

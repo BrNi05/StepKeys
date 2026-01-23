@@ -14,4 +14,7 @@ func SetupLogging() {
 	log.SetOutput(logFile)
 
 	log.SetFlags(log.LstdFlags | log.Lshortfile)
+
+	// Start logging session
+	log.Println("\nStepKeys started.")
 }

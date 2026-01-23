@@ -6,8 +6,8 @@ import (
 	"github.com/getlantern/systray"
 
 	Config "stepkeys/server/config"
+	Handler "stepkeys/server/handler"
 	Logging "stepkeys/server/logging"
-	Serial "stepkeys/server/serial"
 	Tray "stepkeys/server/tray"
 	Web "stepkeys/server/web"
 )
@@ -17,7 +17,7 @@ func main() {
 	Logging.SetupLogging()
 
 	// Load .env or use defaults
-	Config.LoadEnv()
+	baudRate, serialPort := Config.LoadEnv()
 
 	// Load app and pedal map config
 	Config.LoadConfig()
@@ -34,7 +34,7 @@ func main() {
 	// Start serial listener
 	// If StepKeys is not enabled, the listener will not process any events
 	go func() {
-		if err := Serial.ListenSerial(); err != nil {
+		if err := Handler.ListenSerial(baudRate, serialPort); err != nil {
 			log.Println("Serial listener disabled:", err)
 		}
 	}()

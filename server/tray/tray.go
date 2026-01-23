@@ -16,6 +16,8 @@ import (
 var iconBytes []byte
 
 func TrayOnReady() {
+	log.Println("StepKeys tray menu is initialized.")
+
 	systray.SetTitle("")
 	systray.SetTooltip("StepKeys Server")
 	systray.SetIcon(iconBytes)
@@ -115,5 +117,7 @@ func openBrowser(url string) {
 	err := browser.OpenURL(url)
 	if err != nil {
 		log.Printf("Failed to open browser: %v", err)
+	} else {
+		log.Printf("Opened browser to %s", url)
 	}
 }
