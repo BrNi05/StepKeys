@@ -1,24 +1,29 @@
 package web
 
 import (
+	"embed"
 	"fmt"
+	"io/fs"
 	"log"
 	"net/http"
-	"path/filepath"
 
 	Config "stepkeys/server/config"
-	. "stepkeys/server/os"
 )
 
-// Serve the webGUI
-func StartGUI() {
-	webDir := filepath.Join(filepath.Dir(GetExecPath()), "webgui")
+//go:embed gui/*
+var guiFS embed.FS
 
-	fs := http.FileServer(http.Dir(webDir))
-	http.Handle("/", fs)
+func StartGUI() {
+	// Sub filesystem to serve UI at root
+	subFS, err := fs.Sub(guiFS, "gui")
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	http.Handle("/", http.FileServer(http.FS(subFS)))
 
 	addr := fmt.Sprintf(":%d", Config.GetWebPort())
-	log.Println("Starting webGUI on port", addr, "serving folder:", webDir)
+	log.Println("webGUI started on", addr)
 	if err := http.ListenAndServe(addr, nil); err != nil {
 		log.Println("Failed to start webGUI:", err)
 	}
