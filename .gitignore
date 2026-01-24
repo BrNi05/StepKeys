@@ -33,3 +33,12 @@ docs/
 
 # GUI generated
 server/web/gui
+
+# GUI
+logs
+*.log
+npm-debug.log*
+node_modules
+dist
+dist-ssr
+*.local
