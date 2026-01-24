@@ -39,9 +39,8 @@ type PedalAction struct {
 	Behaviour PedalBehaviour `json:"behaviour" example:"oneshot"`
 }
 
-// PedalMap represents the full pedal configuration.
+// PedalMap represents the full pedal configuration
 // @Description Map of pedal IDs to their assigned actions
-// @example {"1":{"mode":"sequence","keys":["ctrl","shift"],"behaviour":"oneshot"}}
 type PedalMap map[string]PedalAction
 
 // Validate the pedal mode string
