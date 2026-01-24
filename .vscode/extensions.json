@@ -1,0 +1,13 @@
+{
+  "recommendations": [
+    "Vue.volar",
+    "aaron-bond.better-comments",
+    "christian-kohler.npm-intellisense",
+    "davidanson.vscode-markdownlint",
+    "golang.go",
+    "redhat.vscode-yaml",
+    "sonarsource.sonarlint-vscode",
+    "timonwong.shellcheck",
+    "dbaeumer.vscode-eslint"
+  ]
+}
