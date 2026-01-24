@@ -18,28 +18,30 @@ type PedalBehaviour string
 const (
 	Oneshot PedalBehaviour = "oneshot"
 	Toggle  PedalBehaviour = "toggle"
+	Hold    PedalBehaviour = "hold"
 )
 
 // PedalAction describes what a pedal does when pressed
 type PedalAction struct {
 	// Mode defines how keys are triggered
-	// sequence = keys pressed one after another
-	// combo = keys pressed together (a key combo)
+	// sequence: keys pressed one after another
+	// combo:    keys pressed together (a key combination)
 	Mode PedalMode `json:"mode" example:"sequence"`
 
 	// Keys are the key names sent to the OS
 	// Supported: https://github.com/go-vgo/robotgo/blob/master/docs/keys.md#keys
 	Keys []string `json:"keys" example:"ctrl,shift,escape"`
 
-	// Behaviour defines how the pedal behaves while pressed
-	// oneshot = press keys once per pedal press
-	// toggle = the keys are held down until the pedal is pressed again
+	// Behaviour defines how a pedal behaves while pressed
+	// oneshot: press keys once per pedal press
+	// toggle:  the keys are held down until the pedal is pressed again
+	// hold:    the keys are held down until the pedal is released
 	Behaviour PedalBehaviour `json:"behaviour" example:"oneshot"`
 }
 
 // PedalMap represents the full pedal configuration.
 // @Description Map of pedal IDs to their assigned actions
-// @example {"pedal_1":{"mode":"sequence","keys":["ctrl","shift"],"behaviour":"oneshot"}}
+// @example {"1":{"mode":"sequence","keys":["ctrl","shift"],"behaviour":"oneshot"}}
 type PedalMap map[string]PedalAction
 
 // Validate the pedal mode string
@@ -49,7 +51,7 @@ func isValidMode(mode PedalMode) bool {
 
 // Validate the pedal behaviour string
 func isValidBehaviour(behaviour PedalBehaviour) bool {
-	return behaviour == Oneshot || behaviour == Toggle
+	return behaviour == Oneshot || behaviour == Toggle || behaviour == Hold
 }
 
 // Checks if all keys are valid
@@ -81,7 +83,7 @@ func ValidatePedalMap(m PedalMap) error {
 				pedalID, action.Mode)
 		}
 		if !isValidBehaviour(action.Behaviour) {
-			return fmt.Errorf("Pedal %q: invalid behaviour %q (use <oneshot> or <toggle>)",
+			return fmt.Errorf("Pedal %q: invalid behaviour %q (use <oneshot>, <toggle> or <hold>)",
 				pedalID, action.Behaviour)
 		}
 
