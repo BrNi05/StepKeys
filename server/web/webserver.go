@@ -23,7 +23,7 @@ func StartGUI() {
 	http.Handle("/", http.FileServer(http.FS(subFS)))
 
 	addr := fmt.Sprintf(":%d", Config.GetWebPort())
-	log.Println("webGUI started on", addr)
+	log.Println("webGUI started on port", addr)
 	if err := http.ListenAndServe(addr, nil); err != nil {
 		log.Println("Failed to start webGUI:", err)
 	}

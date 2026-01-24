@@ -1,6 +1,7 @@
 package web
 
 import (
+	"log"
 	"net/http"
 
 	// Triggers swagger docs init
@@ -11,4 +12,6 @@ import (
 
 func ServeApiDocs() {
 	http.Handle("/api/docs/", httpSwagger.WrapHandler)
+
+	log.Println("API docs route registered at /api/docs/.")
 }
