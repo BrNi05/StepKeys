@@ -45,6 +45,8 @@ type AppConfig struct {
 var (
 	appConfig   AppConfig
 	appConfigMu sync.RWMutex
+
+	defaultPort = 18000 // preferred web server port
 )
 
 // Path to stepkeys executable
@@ -85,12 +87,12 @@ func LoadConfig() {
 	if data, err := os.ReadFile(appConfigFilePath); err == nil {
 		if err := json.Unmarshal(data, &appConfig); err != nil {
 			log.Println("Error parsing app config, using defaults:", err)
-			appConfig = AppConfig{WebPort: 8080, StartOnBoot: false, Enabled: false}
+			appConfig = AppConfig{WebPort: defaultPort, StartOnBoot: false, Enabled: false}
 			saveAppConfig()
 		}
 	} else {
 		log.Println("App config not found, creating default")
-		appConfig = AppConfig{WebPort: 8080, StartOnBoot: false, Enabled: false}
+		appConfig = AppConfig{WebPort: defaultPort, StartOnBoot: false, Enabled: false}
 		saveAppConfig()
 	}
 
@@ -205,6 +207,7 @@ func ToggleStartOnBoot() {
 }
 
 // Returns the port for the web server
+// During normal operation, the web port should not be changed by the user
 func GetWebPort() int {
 	appConfigMu.RLock()
 	defer appConfigMu.RUnlock()
