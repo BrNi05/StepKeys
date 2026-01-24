@@ -5,6 +5,15 @@ updates:
     schedule:
       interval: "monthly"
     commit-message:
-      prefix: "DEPS UPDATE: "
+      prefix: "Server deps update: "
+    labels:
+      - "dependencies"
+
+  - package-ecosystem: "npm"
+    directory: "/gui"
+    schedule:
+      interval: "monthly"
+    commit-message:
+      prefix: "GUI deps update: "
     labels:
       - "dependencies"
