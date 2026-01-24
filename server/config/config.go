@@ -78,7 +78,7 @@ func initConfigFiles() {
 // Load config from file
 func LoadConfig() {
 	initConfigFiles()
-	log.Println("Loading app and pedal config...")
+	log.Println("Loading app and pedal config.")
 
 	// Load app config
 	// Start on boot state is not enforced here, only on runtime toggle events
@@ -110,6 +110,10 @@ func LoadConfig() {
 			ToggleEnabled() // disable if StepKeys was enabled
 		}
 	}
+
+	// Sync handler copies
+	Handler.UpdatePedalMap(GetPedalMap())
+	Handler.UpdateEnabled(IsEnabled())
 }
 
 // Save config data to file
