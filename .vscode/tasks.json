@@ -15,7 +15,8 @@
       "options": {
         "cwd": "${workspaceFolder}/server"
       },
-      "problemMatcher": []
+      "problemMatcher": [],
+      "detail": "Generates API docs using swag"
     },
     {
       "label": "Build StepKeys",
@@ -27,7 +28,8 @@
         "isDefault": true
       },
       "problemMatcher": ["$go"],
-      "dependsOn": ["Generate Swagger Docs"]
+      "dependsOn": ["Generate Swagger Docs"],
+      "detail": "Builds the StepKeys server app. Regenerates API docs before building",
     },
     {
       "label": "Run StepKeys (Prod, POSIX)",
@@ -38,7 +40,8 @@
       "dependsOn": ["Build StepKeys"],
       "options": {
         "cwd": "${workspaceFolder}/server"
-      }
+      },
+      "detail": "Builds and runs the StepKeys server app"
     },
     {
       "label": "Run StepKeys (Prod, Win)",
@@ -49,26 +52,62 @@
       "dependsOn": ["Build StepKeys"],
       "options": {
         "cwd": "${workspaceFolder}/server"
+      },
+      "detail": "Builds and runs the StepKeys server app"
+    },
+    {
+      "label": "GUI: Dev",
+      "type": "npm",
+      "script": "dev",
+      "group": "none",
+      "problemMatcher": [],
+      "detail": "Runs the Vite dev server for the GUI",
+      "options": {
+        "cwd": "${workspaceFolder}/gui"
       }
     },
     {
-      "label": "Clean (POSIX)",
-      "type": "shell",
-      "command": "rm -f stepkeys",
-      "group": "none",
+      "label": "GUI: Build",
+      "type": "npm",
+      "script": "build",
+      "group": "build",
       "problemMatcher": [],
+      "detail": "Builds the production GUI",
       "options": {
-        "cwd": "${workspaceFolder}/server"
+        "cwd": "${workspaceFolder}/gui"
       }
     },
     {
-      "label": "Clean (Win)",
-      "type": "shell",
-      "command": "del /Q stepkeys.exe",
+      "label": "GUI: Preview",
+      "type": "npm",
+      "script": "preview",
       "group": "none",
       "problemMatcher": [],
+      "detail": "Preview the production build of the GUI",
       "options": {
-        "cwd": "${workspaceFolder}/server"
+        "cwd": "${workspaceFolder}/gui"
+      }
+    },
+    {
+      "label": "GUI: ESLint",
+      "type": "npm",
+      "script": "lint",
+      "group": "none",
+      "problemMatcher": ["$eslint-stylish"],
+      "detail": "Run ESLint on the GUI codebase",
+      "options": {
+        "cwd": "${workspaceFolder}/gui"
+      }
+    },
+    {
+      "label": "GUI: Prettier",
+      "type": "npm",
+      "script": "format",
+      "group": "none",
+      "problemMatcher": [],
+      "detail": "Run Prettier to format GUI code",
+      "options": {
+        "cwd": "${workspaceFolder}/gui"
       }
     }
   ]
