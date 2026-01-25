@@ -3,10 +3,15 @@ package logging
 import (
 	"log"
 	"os"
+	"path/filepath"
+
+	OS "stepkeys/server/os"
 )
 
 func SetupLogging() {
-	logFile, err := os.OpenFile("stepkeys.log", os.O_CREATE|os.O_APPEND|os.O_WRONLY, 0640)
+	logFilePath := filepath.Join(OS.GetExecDir(), "stepkeys.log")
+
+	logFile, err := os.OpenFile(logFilePath, os.O_CREATE|os.O_APPEND|os.O_WRONLY, 0640)
 	if err != nil {
 		log.Fatalf("Failed to open log file: %v", err)
 	}
