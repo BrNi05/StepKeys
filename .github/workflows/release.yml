@@ -45,6 +45,19 @@ jobs:
           cp -r gui/dist/* server/web/gui/
         shell: bash
 
+      - name: Install swag CLI
+        working-directory: server
+        run: |
+          go install github.com/swaggo/swag/cmd/swag@latest
+          export PATH="$PATH:$(go env GOPATH)/bin"
+        shell: bash
+
+      - name: Generate Swagger docs
+        working-directory: server
+        run: |
+          swag init --generalInfo main.go --output ./docs
+        shell: bash
+
       - name: Build StepKeys
         working-directory: server
         run: |

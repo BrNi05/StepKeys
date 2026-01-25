@@ -59,6 +59,12 @@ npm run build
 echo -e "\nCopying built GUI to server..."
 cp -r "$GUI_DIST_DIR/"* "$SERVER_GUI_DIR/"
 
+# Generate Swagger docs
+echo -e "\nGenerating Swagger docs..."
+
+cd "$SERVER_DIR"
+swag init --generalInfo main.go --output ./docs
+
 # Compiling
 echo -e "\nCompiling native binary..."
 
@@ -66,7 +72,7 @@ cd "$SERVER_DIR"
 OUTPUT_NAME="stepkeys-${OS}-${ARCH}-${VERSION}"
 OUTPUT_PATH="$BIN_DIR/$OUTPUT_NAME"
 
-GOOS="$OS" GOARCH="$ARCH" go build -o "$OUTPUT_PATH" .
+GOOS="$OS" GOARCH="$ARCH" go build -ldflags "-s -w" -o "$OUTPUT_PATH" .
 
 echo -e "Release build completed successfully!"
 
