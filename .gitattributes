@@ -38,3 +38,6 @@ go.sum text eol=lf
 // YML and YAML files
 *.yml text eol=lf
 *.yaml text eol=lf
+
+// Vue files
+*.vue text eol=lf
