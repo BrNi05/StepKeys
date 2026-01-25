@@ -8,6 +8,7 @@
     "redhat.vscode-yaml",
     "sonarsource.sonarlint-vscode",
     "timonwong.shellcheck",
-    "dbaeumer.vscode-eslint"
+    "dbaeumer.vscode-eslint",
+    "ms-vscode.powershell"
   ]
 }
