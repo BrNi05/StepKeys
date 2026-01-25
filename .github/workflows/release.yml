@@ -58,6 +58,15 @@ jobs:
           swag init --generalInfo main.go --output ./docs
         shell: bash
 
+      - name: Install Linux dependencies
+        if: matrix.os == 'ubuntu-latest'
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y \
+            libx11-dev libxrandr-dev libxext-dev libxtst-dev libxi-dev \
+            libayatana-appindicator3-dev pkg-config
+        shell: bash
+
       - name: Build StepKeys
         working-directory: server
         run: |
