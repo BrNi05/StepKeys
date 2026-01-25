@@ -80,7 +80,7 @@ StepKeys is designed in a way that the (external) hardware can be easily replace
 > [!WARNING]
 > Due to the protocol used, the maximum number of pedals supported is 128 (0-127).
 
-## How to set up StepKeys server
+## How to set up StepKeys
 
 Use the installer scripts, which will guide you through the entire installation and setup process.
 
@@ -96,11 +96,53 @@ curl -fsSL https://raw.githubusercontent.com/BrNi05/StepKeys/main/release/posix.
 iwr -useb https://raw.githubusercontent.com/BrNi05/StepKeys/main/release/windows.ps1 | iex
 ```
 
+## How to update StepKeys
+
+StepKeys includes a built-in version manager and will notify you whenever an update is available.
+
+### Linux / macOS
+
+``` bash
+curl -fsSL https://raw.githubusercontent.com/BrNi05/StepKeys/main/release/posix.sh | bash -s update
+```
+
+### Windows
+
+``` bash
+iwr -useb https://raw.githubusercontent.com/BrNi05/StepKeys/main/release/windows.ps1 | iex -args update
+```
+
 ## How to use StepKeys
 
 ### Tray menu
 
+StepKeys comes with a tray menu, which is the main interface you’ll use most of the time - aside from the pedals, of course.
+
+- **Open:** opens StepKeys webGUI
+
+- **Enabled:** ticked if StepKeys is enabled and listening on the serial port
+
+> [!IMPORTANT]
+> StepKeys cannot be enabled if there is no pedal configuration created yet.
+>
+> If StepKeys cannot open the serial port, the enabled status won't have an effect on functionality as serial listening will be disabled until a restart.
+
+- **Start on boot:** toggles whether StepKeys should start on boot or not
+
+- **API Docs:** opens the StepKeys API documentation (Swagger)
+
+- **Docs:** opens the GitHub page of stepkeys and shows this readme
+
+- **Quit:** terminates StepKeys process
+
 ### webGUI
+
+StepKeys includes a built-in GUI that opens in your browser.
+
+> [!TIP]
+> One can create a custom GUI, since the built-in is powered entirely by the public API.
+
+...
 
 ## StepKeys API
 
