@@ -9,6 +9,7 @@ import (
 	Handler "stepkeys/server/handler"
 	Logging "stepkeys/server/logging"
 	Tray "stepkeys/server/tray"
+	Updater "stepkeys/server/updater"
 	Web "stepkeys/server/web"
 )
 
@@ -21,6 +22,9 @@ func main() {
 
 	// Load app and pedal map config
 	Config.LoadConfig()
+
+	// Check for updates
+	Updater.CheckForUpdates()
 
 	// Register API docs route
 	Web.ServeApiDocs()

@@ -120,7 +120,10 @@ StepKeys comes with a tray menu, which is the main interface you’ll use most o
 
 - **Open:** opens StepKeys webGUI
 
-- **Enabled:** ticked if StepKeys is enabled and listening on the serial port
+> [!TIP]
+> If an update is available, this menu item will show as: **Open (Update Available)**.
+
+- **Enabled:** ticked if StepKeys is enabled ankvd listening on the serial port
 
 > [!IMPORTANT]
 > StepKeys cannot be enabled if there is no pedal configuration created yet.

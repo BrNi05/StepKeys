@@ -10,6 +10,7 @@ import (
 	"github.com/pkg/browser"
 
 	Config "stepkeys/server/config"
+	Updater "stepkeys/server/updater"
 )
 
 //go:embed assets/icon.ico
@@ -23,11 +24,19 @@ func TrayOnReady() {
 	systray.SetIcon(iconBytes)
 
 	menuOpen := systray.AddMenuItem("Open", "")
+	systray.AddSeparator()
 	menuEnabled := systray.AddMenuItemCheckbox("Enabled", "", Config.IsEnabled())
 	menuStart := systray.AddMenuItemCheckbox("Start on boot", "", Config.IsStartOnBootEnabled())
+	systray.AddSeparator()
 	menuApiDocs := systray.AddMenuItem("API Docs", "")
 	menuDocs := systray.AddMenuItem("Docs", "")
+	systray.AddSeparator()
 	menuQuit := systray.AddMenuItem("Quit", "")
+
+	// Indicate if update is available
+	if Updater.UpdateAvailable() {
+		menuOpen.SetTitle("Open (Update Available)")
+	}
 
 	// Initial state
 	if Config.IsEnabled() {

@@ -9,6 +9,7 @@ import (
 
 	Config "stepkeys/server/config"
 	. "stepkeys/server/pedal"
+	Updater "stepkeys/server/updater"
 )
 
 const (
@@ -21,6 +22,11 @@ const (
 type ErrorResponse struct {
 	Status       int    `json:"status" example:"400"`
 	ErrorMessage string `json:"errorMessage" example:"Invalid JSON payload"`
+}
+
+// @Description Standard JSON boolean response
+type BooleanResponse struct {
+	Value bool `json:"value" example:"true"`
 }
 
 // Helper: construct and send JSON error response
@@ -77,52 +83,52 @@ func updatePedals(w http.ResponseWriter, r *http.Request) {
 // @Description  Returns whether StepKeys is enabled or disabled.
 // @Tags         settings
 // @Produce      json
-// @Success      200 {object} bool
+// @Success      200 {object} BooleanResponse
 // @Router       /api/enabled [get]
 func getEnabled(w http.ResponseWriter, _ *http.Request) {
 	enabled := Config.IsEnabled()
 	w.Header().Set(contentType, contentTypeJson)
-	_ = json.NewEncoder(w).Encode(map[string]bool{"enabled": enabled})
+	_ = json.NewEncoder(w).Encode(BooleanResponse{Value: enabled})
 }
 
 // @Summary      Toggle enabled state
 // @Description  Toggles whether StepKeys is enabled or disabled. If the pedal configuration is empty, enabling will silently fail.
 // @Tags         settings
 // @Produce      json
-// @Success      200 {object} bool
+// @Success      200 {object} BooleanResponse
 // @Router       /api/enabled [post]
 func toggleEnabled(w http.ResponseWriter, _ *http.Request) {
 	Config.ToggleEnabled()
 	w.Header().Set(contentType, contentTypeJson)
-	_ = json.NewEncoder(w).Encode(map[string]bool{"enabled": Config.IsEnabled()})
+	_ = json.NewEncoder(w).Encode(BooleanResponse{Value: Config.IsEnabled()})
 }
 
 // @Summary      Get start on boot state
 // @Description  Returns whether StepKeys is set to start on boot.
 // @Tags         settings
 // @Produce      json
-// @Success      200 {object} bool
+// @Success      200 {object} BooleanResponse
 // @Router       /api/boot [get]
 func getStartOnBootEnabled(w http.ResponseWriter, _ *http.Request) {
 	w.Header().Set(contentType, contentTypeJson)
-	_ = json.NewEncoder(w).Encode(map[string]bool{"startOnBoot": Config.IsStartOnBootEnabled()})
+	_ = json.NewEncoder(w).Encode(BooleanResponse{Value: Config.IsStartOnBootEnabled()})
 }
 
 // @Summary      Toggle start on boot state
 // @Description  Toggles whether StepKeys should start on boot.
 // @Tags         settings
 // @Produce      json
-// @Success      200 {object} bool
+// @Success      200 {object} BooleanResponse
 // @Router       /api/boot [post]
 func toggleStartOnBoot(w http.ResponseWriter, _ *http.Request) {
 	Config.ToggleStartOnBoot()
 	w.Header().Set(contentType, contentTypeJson)
-	_ = json.NewEncoder(w).Encode(map[string]bool{"startOnBoot": Config.IsStartOnBootEnabled()})
+	_ = json.NewEncoder(w).Encode(BooleanResponse{Value: Config.IsStartOnBootEnabled()})
 }
 
 // @Summary      Quit application
-// @Description  Terminates the StepKeys process
-// @Tags         settings
+// @Description  Terminates the StepKeys process.
+// @Tags         lifecycle
 // @Success      200
 // @Router       /api/quit [post]
 func quitApp(w http.ResponseWriter, _ *http.Request) {
@@ -136,6 +142,24 @@ func quitApp(w http.ResponseWriter, _ *http.Request) {
 		time.Sleep(500 * time.Millisecond)
 		os.Exit(0)
 	}()
+}
+
+// @Summary      Check for updates
+// @Description  Returns whether a new update is available.
+// @Tags         lifecycle
+// @Produce      json
+// @Param        force query bool false "Force check for updates"
+// @Success      200 {object} BooleanResponse
+// @Router       /api/update [get]
+func getUpdateAvailable(w http.ResponseWriter, r *http.Request) {
+	forceCheck := r.URL.Query().Get("force")
+
+	if forceCheck == "1" || forceCheck == "true" {
+		Updater.CheckForUpdates()
+	}
+
+	w.Header().Set(contentType, contentTypeJson)
+	_ = json.NewEncoder(w).Encode(BooleanResponse{Value: Updater.UpdateAvailable()})
 }
 
 // Registers all API routes
@@ -179,6 +203,14 @@ func RegisterAPI() {
 			return
 		}
 		quitApp(w, r)
+	})
+
+	http.HandleFunc("/api/update", func(w http.ResponseWriter, r *http.Request) {
+		if r.Method != http.MethodGet {
+			writeJSONError(w, http.StatusMethodNotAllowed, methodNotAllowed)
+			return
+		}
+		getUpdateAvailable(w, r)
 	})
 
 	log.Println("API routes registered.")

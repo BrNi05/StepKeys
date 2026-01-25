@@ -11,6 +11,7 @@ import (
 
 var serialPort string
 var baudRate int
+var appVersion string
 
 func LoadEnv() (baudRate int, serialPort string) {
 	// Load .env file
@@ -38,6 +39,13 @@ func LoadEnv() (baudRate int, serialPort string) {
 		log.Println("Using default for BAUD_RATE env var:", baudRate)
 	}
 
+	// VERSION
+	appVersion = os.Getenv("VERSION")
+	if appVersion == "" {
+		appVersion = "1.0.0"
+		log.Println("Using default for VERSION env var:", appVersion)
+	}
+
 	return baudRate, serialPort
 }
 
@@ -54,4 +62,8 @@ func defaultSerialPort() string {
 		log.Fatal("Unsupported OS")
 		return ""
 	}
+}
+
+func GetAppVersion() string {
+	return appVersion
 }
