@@ -2,6 +2,21 @@
   "version": "2.0.0",
   "tasks": [
     {
+        "label": "Build StepKeys (Native)",
+        "type": "shell",
+        "command": "${workspaceFolder}/build/build.sh",
+        "args": [],
+        "options": {
+            "cwd": "${workspaceFolder}"
+        },
+        "problemMatcher": [],
+        "group": {
+            "kind": "build",
+            "isDefault": true
+        },
+        "detail": "Builds the native StepKeys server app",
+    },
+    {
       "label": "Generate Swagger Docs",
       "type": "shell",
       "command": "swag",
@@ -25,7 +40,7 @@
       "args": [],
       "group": {
         "kind": "build",
-        "isDefault": true
+        "isDefault": false
       },
       "problemMatcher": ["$go"],
       "dependsOn": ["Generate Swagger Docs"],
