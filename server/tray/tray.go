@@ -24,7 +24,7 @@ func TrayOnReady() {
 
 	menuOpen := systray.AddMenuItem("Open", "")
 	menuEnabled := systray.AddMenuItemCheckbox("Enabled", "", Config.IsEnabled())
-	menuStart := systray.AddMenuItemCheckbox("Start on Boot", "", Config.IsStartOnBootEnabled())
+	menuStart := systray.AddMenuItemCheckbox("Start on boot", "", Config.IsStartOnBootEnabled())
 	menuApiDocs := systray.AddMenuItem("API Docs", "")
 	menuDocs := systray.AddMenuItem("Docs", "")
 	menuQuit := systray.AddMenuItem("Quit", "")

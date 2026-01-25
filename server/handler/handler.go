@@ -213,6 +213,9 @@ func ListenSerial(baudRate int, serialPort string) error {
 	// Buffer for reading one single byte from the Arduino
 	buf := make([]byte, 1)
 
+	// Clear input buffer on start
+	port.ResetInputBuffer()
+
 	for {
 		// Do not process events if disabled
 		// 500ms sleep to avoid high CPU usage
