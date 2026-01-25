@@ -1,0 +1,69 @@
+name: StepKeys Multi-Platform Build
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build:
+    strategy:
+      fail-fast: true
+      matrix:
+        os: [ubuntu-latest, macos-latest, windows-latest]
+
+    runs-on: ${{ matrix.os }}
+
+    name: Build on ${{ matrix.os }}
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+
+      - name: Setup Node
+        uses: actions/setup-node@v6
+        with:
+          node-version: 24
+
+      - name: Setup Go
+        uses: actions/setup-go@v6
+        with:
+          go-version: "1.25.6"
+
+      - name: Build GUI
+        working-directory: gui
+        run: |
+          npm ci --silent
+          npm run lint
+          npm run build
+        shell: bash
+
+      - name: Copy GUI to server
+        run: |
+          rm -rf server/web/gui
+          mkdir -p server/web/gui
+          cp -r gui/dist/* server/web/gui/
+        shell: bash
+
+      - name: Build StepKeys
+        working-directory: server
+        run: |
+          VERSION=$(git describe --tags --abbrev=0 2>/dev/null || echo "dev")
+          VERSION=${VERSION#v}
+
+          mkdir -p ../build/bin
+          
+          if [[ "${{ matrix.os }}" == "ubuntu-latest" ]]; then
+          go build -ldflags "-s -w" -o ../build/bin/stepkeys-linux-amd64-${VERSION}
+          elif [[ "${{ matrix.os }}" == "macos-latest" ]]; then
+          go build -ldflags "-s -w" -o ../build/bin/stepkeys-macos-arm64-${VERSION}
+          elif [[ "${{ matrix.os }}" == "windows-latest" ]]; then
+          go build -ldflags "-s -w" -o ../build/bin/stepkeys-windows-amd64-${VERSION}.exe
+          fi
+        shell: bash
+
+      - name: Upload binaries
+        uses: actions/upload-artifact@v6
+        with:
+          name: stepkeys-${{ matrix.os }}
+          path: build/bin/*
