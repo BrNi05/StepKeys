@@ -24,6 +24,7 @@ jobs:
         uses: actions/setup-node@v6
         with:
           node-version: 24
+          cache: 'npm'
 
       - name: Setup Go
         uses: actions/setup-go@v6
@@ -45,11 +46,20 @@ jobs:
           cp -r gui/dist/* server/web/gui/
         shell: bash
 
+      - name: Cache Go modules
+        uses: actions/cache@v5
+        with:
+          path: |
+            ~/go/pkg/mod
+            ~/go/bin
+          key: go-${{ runner.os }}-${{ hashFiles('**/go.sum') }}
+          restore-keys: |
+            go-${{ runner.os }}-
+
       - name: Install swag CLI
         working-directory: server
         run: |
           go install github.com/swaggo/swag/cmd/swag@latest
-          export PATH="$PATH:$(go env GOPATH)/bin"
         shell: bash
 
       - name: Generate Swagger docs
@@ -89,3 +99,38 @@ jobs:
         with:
           name: stepkeys-${{ matrix.os }}
           path: build/bin/*
+
+  package:
+      needs: build
+      runs-on: ubuntu-latest
+      name: Package all binaries
+      steps:
+        - name: Download Linux binaries
+          uses: actions/download-artifact@v7
+          with:
+            name: stepkeys-ubuntu-latest
+            path: build/linux
+
+        - name: Download macOS binaries
+          uses: actions/download-artifact@v7
+          with:
+            name: stepkeys-macos-latest
+            path: build/macos
+
+        - name: Download Windows binaries
+          uses: actions/download-artifact@v7
+          with:
+            name: stepkeys-windows-latest
+            path: build/windows
+
+        - name: Zip all binaries
+          run: |
+            cd build
+            zip -r stepkeys-all.zip linux/* macos/* windows/*
+          shell: bash
+
+        - name: Upload combined zip
+          uses: actions/upload-artifact@v6
+          with:
+            name: stepkeys-all
+            path: build/stepkeys-all.zip
