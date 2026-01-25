@@ -169,6 +169,8 @@ git clone https://github.com/BrNi05/StepKeys.git
 
 > [!TIP]
 > Check the current **GOPATH** with: `go env GOPATH`.
+>
+> Example: add it to **PATH**: `echo 'export PATH="$PATH:$(go env GOPATH)/bin"' >> ~/.bashrc`
 
 3. Install dependencies
 
@@ -197,6 +199,15 @@ npm install # the GUI needs a node and npm to be installed
 5. Start working with StepKeys
 
 - Use the VS Code tasks and launch config to start or build StepKeys.
+
+> [!TIP]
+> On Linux, **Systray** needs a few Linux libs to compile. You will encounter build errors if these are missing. Example solutions:
+>
+> Fedora: `sudo dnf install -y pkg-config libayatana-appindicator-gtk3-devel`
+>
+> Ubuntu: `sudo apt-get install -y pkg-config libayatana-appindicator3-dev`
+>
+> Some deprecation warnings may still appear during build or runtime, but these are expected and can safely be ignored.
 
 ## Attributions
 
