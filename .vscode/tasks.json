@@ -14,7 +14,7 @@
             "kind": "build",
             "isDefault": true
         },
-        "detail": "Builds the native StepKeys server app",
+        "detail": "Builds the native StepKeys server app.",
     },
     {
       "label": "Generate Swagger Docs",
@@ -31,7 +31,7 @@
         "cwd": "${workspaceFolder}/server"
       },
       "problemMatcher": [],
-      "detail": "Generates API docs using swag"
+      "detail": "Generates API docs using swag."
     },
     {
       "label": "Build StepKeys",
@@ -44,7 +44,7 @@
       },
       "problemMatcher": ["$go"],
       "dependsOn": ["Generate Swagger Docs"],
-      "detail": "Builds the StepKeys server app. Regenerates API docs before building",
+      "detail": "Builds the StepKeys server app. Regenerates API docs before building.",
     },
     {
       "label": "Run StepKeys (Prod, POSIX)",
@@ -56,7 +56,7 @@
       "options": {
         "cwd": "${workspaceFolder}/server"
       },
-      "detail": "Builds and runs the StepKeys server app"
+      "detail": "Builds and runs the StepKeys server app."
     },
     {
       "label": "Run StepKeys (Prod, Win)",
@@ -68,7 +68,7 @@
       "options": {
         "cwd": "${workspaceFolder}/server"
       },
-      "detail": "Builds and runs the StepKeys server app"
+      "detail": "Builds and runs the StepKeys server app."
     },
     {
       "label": "GUI: Dev",
@@ -76,7 +76,7 @@
       "script": "dev",
       "group": "none",
       "problemMatcher": [],
-      "detail": "Runs the Vite dev server for the GUI",
+      "detail": "Runs the Vite dev server for the GUI.",
       "options": {
         "cwd": "${workspaceFolder}/gui"
       }
@@ -87,7 +87,7 @@
       "script": "build",
       "group": "build",
       "problemMatcher": [],
-      "detail": "Builds the production GUI",
+      "detail": "Builds the production GUI.",
       "options": {
         "cwd": "${workspaceFolder}/gui"
       }
@@ -98,7 +98,7 @@
       "script": "preview",
       "group": "none",
       "problemMatcher": [],
-      "detail": "Preview the production build of the GUI",
+      "detail": "Preview the production build of the GUI.",
       "options": {
         "cwd": "${workspaceFolder}/gui"
       }
@@ -109,7 +109,7 @@
       "script": "lint",
       "group": "none",
       "problemMatcher": ["$eslint-stylish"],
-      "detail": "Run ESLint on the GUI codebase",
+      "detail": "Run ESLint on the GUI codebase.",
       "options": {
         "cwd": "${workspaceFolder}/gui"
       }
@@ -120,7 +120,7 @@
       "script": "format",
       "group": "none",
       "problemMatcher": [],
-      "detail": "Run Prettier to format GUI code",
+      "detail": "Run Prettier to format GUI code.",
       "options": {
         "cwd": "${workspaceFolder}/gui"
       }
