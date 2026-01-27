@@ -211,4 +211,4 @@ npm install # the GUI needs a node and npm to be installed
 
 ## Attributions
 
-StepKeys icon is from Vecteezy ([Shapes Vectors by Vecteezy](https://www.vecteezy.com/free-vector/shapes)).
+StepKeys icon is from Vecteezy ([Shapes Vectors by Vecteezy](https://www.vecteezy.com/free-vector/shapes)). The original (white) background was removed by me.
