@@ -29,6 +29,11 @@ type BooleanResponse struct {
 	Value bool `json:"value" example:"true"`
 }
 
+// @Description Standard JSON string response
+type StringResponse struct {
+	Value string `json:"value" example:"COM3"`
+}
+
 // Helper: construct and send JSON error response
 func writeJSONError(w http.ResponseWriter, status int, msg string) {
 	w.Header().Set("Content-Type", "application/json")
@@ -162,6 +167,18 @@ func getUpdateAvailable(w http.ResponseWriter, r *http.Request) {
 	_ = json.NewEncoder(w).Encode(BooleanResponse{Value: Updater.UpdateAvailable()})
 }
 
+// @Summary      Get serial device name
+// @Description  Returns the name of the serial device used to connect to the MCU.
+// @Tags         additional
+// @Produce      json
+// @Success      200 {object} StringResponse
+// @Router       /api/serial [get]
+func getSerialDeviceName(w http.ResponseWriter, _ *http.Request) {
+	w.Header().Set(contentType, contentTypeJson)
+	_ = json.NewEncoder(w).Encode(StringResponse{Value: Config.GetSerialPort()})
+
+}
+
 // Registers all API routes
 func RegisterAPI() {
 	http.HandleFunc("/api/pedals", func(w http.ResponseWriter, r *http.Request) {
@@ -211,6 +228,14 @@ func RegisterAPI() {
 			return
 		}
 		getUpdateAvailable(w, r)
+	})
+
+	http.HandleFunc("/api/serial", func(w http.ResponseWriter, r *http.Request) {
+		if r.Method != http.MethodGet {
+			writeJSONError(w, http.StatusMethodNotAllowed, methodNotAllowed)
+			return
+		}
+		getSerialDeviceName(w, r)
 	})
 
 	log.Println("API routes registered.")
