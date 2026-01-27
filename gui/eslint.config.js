@@ -37,6 +37,20 @@ export default defineConfig([
       'vue/max-attributes-per-line': ['warn', { singleline: 3 }],
       'vue/singleline-html-element-content-newline': 'off',
       'vue/multiline-html-element-content-newline': 'off',
+      'vue/html-self-closing': [
+        'error',
+        {
+          html: {
+            void: 'always',
+            normal: 'never',
+            component: 'always',
+          },
+          svg: 'always',
+          math: 'always',
+        },
+      ],
+      'vue/script-indent': 'off',
+      'prettier/prettier': ['warn'],
     },
   },
   {
