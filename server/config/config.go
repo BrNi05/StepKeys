@@ -179,7 +179,7 @@ func ToggleStartOnBoot() {
 	startOnBootSnapshot := appConfig.StartOnBoot
 
 	// Process changes
-	if IsStartOnBootEnabled() {
+	if appConfig.StartOnBoot {
 		if err := OS.EnableStartOnBoot(); err != nil {
 			log.Println("Failed to enable OS-level autostart:", err)
 			return
