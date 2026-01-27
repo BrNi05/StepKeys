@@ -14,6 +14,10 @@
             "kind": "build",
             "isDefault": true
         },
+        "presentation": {
+            "focus": true,
+            "panel": "new"
+        },
         "detail": "Builds the native StepKeys server app.",
     },
     {
@@ -110,17 +114,6 @@
       "group": "none",
       "problemMatcher": ["$eslint-stylish"],
       "detail": "Run ESLint on the GUI codebase.",
-      "options": {
-        "cwd": "${workspaceFolder}/gui"
-      }
-    },
-    {
-      "label": "GUI: Prettier",
-      "type": "npm",
-      "script": "format",
-      "group": "none",
-      "problemMatcher": [],
-      "detail": "Run Prettier to format GUI code.",
       "options": {
         "cwd": "${workspaceFolder}/gui"
       }
