@@ -9,7 +9,7 @@ import (
 	"github.com/joho/godotenv"
 )
 
-var serialPort string
+var _serialPort string
 var baudRate int
 var appVersion string
 
@@ -25,6 +25,7 @@ func LoadEnv() (baudRate int, serialPort string) {
 		serialPort = defaultSerialPort()
 		log.Println("Using default for SERIAL_PORT env var:", serialPort)
 	}
+	_serialPort = serialPort
 
 	// BAUD_RATE
 	if b := os.Getenv("BAUD_RATE"); b != "" {
@@ -66,4 +67,9 @@ func defaultSerialPort() string {
 
 func GetAppVersion() string {
 	return appVersion
+}
+
+// The API uses this as an additional way to get the serial port (for the GUI)
+func GetSerialPort() string {
+	return _serialPort
 }
