@@ -8,14 +8,18 @@ import (
 	Config "stepkeys/server/config"
 	Handler "stepkeys/server/handler"
 	Logging "stepkeys/server/logging"
+	OS "stepkeys/server/os"
 	Tray "stepkeys/server/tray"
 	Updater "stepkeys/server/updater"
 	Web "stepkeys/server/web"
 )
 
 func main() {
+	// Compute executable path and directory
+	execDir := OS.GetExeDir()
+
 	// Log to file with formatting
-	Logging.SetupLogging()
+	Logging.SetupLogging(execDir)
 
 	// Load .env or use defaults
 	baudRate, serialPort := Config.LoadEnv()

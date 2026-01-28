@@ -5,6 +5,7 @@ import (
 	"path/filepath"
 )
 
+// Readonly variables for executable path and directory
 var (
 	execPath string
 	execDir  string
@@ -27,12 +28,6 @@ func init() {
 	execPath = exePath
 }
 
-// Returns the execDir
-func GetExecDir() string {
+func GetExeDir() string {
 	return execDir
-}
-
-// Returns the execPath
-func GetExecPath() string {
-	return execPath
 }
