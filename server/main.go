@@ -1,8 +1,6 @@
 package main
 
 import (
-	"log"
-
 	"github.com/getlantern/systray"
 
 	Config "stepkeys/server/config"
@@ -43,7 +41,7 @@ func main() {
 	// If StepKeys is not enabled, the listener will not process any events
 	go func() {
 		if err := Handler.ListenSerial(baudRate, serialPort); err != nil {
-			log.Println("Serial listener disabled:", err)
+			Logging.WriteToLogFile("Serial listener disabled: " + err.Error())
 		}
 	}()
 

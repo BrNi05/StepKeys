@@ -2,13 +2,13 @@ package handler
 
 import (
 	"fmt"
-	"log"
 	"sync"
 	"time"
 
 	"github.com/go-vgo/robotgo"
 	"go.bug.st/serial"
 
+	Log "stepkeys/server/logging"
 	Pedal "stepkeys/server/pedal"
 )
 
@@ -129,10 +129,10 @@ func handlePedalByte(b byte) {
 	// Only handle pedal IDs defined in the config
 	action, ok := readPedalMap()[fmt.Sprintf("%d", pedalID)]
 	if !ok {
-		log.Println("Received unknown pedal ID:", pedalID)
+		Log.WriteToLogFile(fmt.Sprintf("Received unknown pedal ID: %d", pedalID))
 		return
 	} else {
-		log.Printf("Pedal %d %s\n", pedalID, map[bool]string{true: "pressed", false: "released"}[pressed])
+		Log.WriteToLogFile(fmt.Sprintf("Pedal %d %s", pedalID, map[bool]string{true: "pressed", false: "released"}[pressed]))
 	}
 
 	switch action.Behaviour {
@@ -197,7 +197,7 @@ func openSerialPort(baudRate int, serialPort string) (serial.Port, error) {
 		return nil, fmt.Errorf("failed to open serial port %s: %w", serialPort, err)
 	}
 
-	log.Println("Serial port opened:", serialPort)
+	Log.WriteToLogFile("Serial port opened: " + serialPort)
 	return port, nil
 }
 

@@ -1,11 +1,13 @@
 package updater
 
 import (
-	"log"
+	"fmt"
 	"net/http"
 	"os"
 	"strings"
 	"sync"
+
+	Log "stepkeys/server/logging"
 )
 
 // Set to true if an update is available, false otherwise or if check is disabled
@@ -21,7 +23,7 @@ func CheckForUpdates() {
 
 	// Skip version check if disabled
 	if os.Getenv("NO_VERSION_CHECK") != "" {
-		log.Println("Version check is disabled.")
+		Log.WriteToLogFile("Version check is disabled.")
 		updateAvailable = false
 		return
 	}
@@ -60,7 +62,7 @@ func CheckForUpdates() {
 		updateAvailable = false
 	}
 
-	log.Println("Update check complete. Current version:", currentVersion, "Latest version:", latestVersion, "Update available:", updateAvailable)
+	Log.WriteToLogFile(fmt.Sprintf("Update check complete. Current version: %s, Latest version: %s, Update available: %t", currentVersion, latestVersion, updateAvailable))
 }
 
 func UpdateAvailable() bool {

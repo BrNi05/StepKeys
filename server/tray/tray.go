@@ -3,13 +3,13 @@ package tray
 import (
 	_ "embed"
 	"fmt"
-	"log"
 	"os"
 
 	"github.com/getlantern/systray"
 	"github.com/pkg/browser"
 
 	Config "stepkeys/server/config"
+	Log "stepkeys/server/logging"
 	Updater "stepkeys/server/updater"
 )
 
@@ -17,7 +17,7 @@ import (
 var iconBytes []byte
 
 func TrayOnReady() {
-	log.Println("StepKeys tray menu is initialized.")
+	Log.WriteToLogFile("StepKeys tray menu is initialized.")
 
 	systray.SetTitle("")
 	systray.SetTooltip("StepKeys Server")
@@ -119,14 +119,14 @@ func TrayOnReady() {
 	}()
 }
 
-func TrayOnExit() { log.Println("StepKeys server is shutting down.") }
+func TrayOnExit() { Log.WriteToLogFile("StepKeys server is shutting down.") }
 
 // Browser open helper
 func openBrowser(url string) {
 	err := browser.OpenURL(url)
 	if err != nil {
-		log.Printf("Failed to open browser: %v", err)
+		Log.WriteToLogFile(fmt.Sprintf("Failed to open browser: %v.", err))
 	} else {
-		log.Printf("Opened browser to %s", url)
+		Log.WriteToLogFile(fmt.Sprintf("Opened browser to %s.", url))
 	}
 }

@@ -4,10 +4,10 @@ import (
 	"embed"
 	"fmt"
 	"io/fs"
-	"log"
 	"net/http"
 
 	Config "stepkeys/server/config"
+	Log "stepkeys/server/logging"
 )
 
 //go:embed gui/*
@@ -17,14 +17,14 @@ func StartGUI() {
 	// Sub filesystem to serve UI at root
 	subFS, err := fs.Sub(guiFS, "gui")
 	if err != nil {
-		log.Fatal(err)
+		Log.ErrorToLogFile(fmt.Sprintf("Failed to start webGUI: %v", err))
 	}
 
 	http.Handle("/", http.FileServer(http.FS(subFS)))
 
 	addr := fmt.Sprintf(":%d", Config.GetWebPort())
-	log.Println("webGUI started on port", addr)
+	Log.WriteToLogFile(fmt.Sprintf("webGUI started on port %s.", addr))
 	if err := http.ListenAndServe(addr, nil); err != nil {
-		log.Println("Failed to start webGUI:", err)
+		Log.ErrorToLogFile(fmt.Sprintf("Failed to start webGUI: %v", err))
 	}
 }

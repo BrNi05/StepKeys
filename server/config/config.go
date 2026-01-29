@@ -2,13 +2,14 @@ package config
 
 import (
 	"encoding/json"
-	"log"
 	"maps"
 	"os"
 	"path/filepath"
+	"strconv"
 	"sync"
 
 	Handler "stepkeys/server/handler"
+	Log "stepkeys/server/logging"
 	OS "stepkeys/server/os"
 	. "stepkeys/server/pedal"
 )
@@ -80,18 +81,18 @@ func initConfigFiles() {
 // Load config from file
 func LoadConfig() {
 	initConfigFiles()
-	log.Println("Loading app and pedal config.")
+	Log.WriteToLogFile("Loading app and pedal config.")
 
 	// Load app config
 	// Start on boot state is not enforced here, only on runtime toggle events
 	if data, err := os.ReadFile(appConfigFilePath); err == nil {
 		if err := json.Unmarshal(data, &appConfig); err != nil {
-			log.Println("Error parsing app config, using defaults:", err)
+			Log.WriteToLogFile("Error parsing app config, using defaults: " + err.Error())
 			appConfig = AppConfig{WebPort: defaultPort, StartOnBoot: false, Enabled: false}
 			saveAppConfig()
 		}
 	} else {
-		log.Println("App config not found, creating default")
+		Log.WriteToLogFile("App config not found, creating default")
 		appConfig = AppConfig{WebPort: defaultPort, StartOnBoot: false, Enabled: false}
 		saveAppConfig()
 	}
@@ -99,14 +100,14 @@ func LoadConfig() {
 	// Load pedal config
 	if data, err := os.ReadFile(pedalConfigFilePath); err == nil {
 		if err := json.Unmarshal(data, &pedalMap); err != nil {
-			log.Println("Error parsing pedal config, disabling pedals:", err)
+			Log.WriteToLogFile("Error parsing pedal config, disabling pedals: " + err.Error())
 			pedalMap = make(PedalMap)
 			if IsEnabled() {
 				ToggleEnabled() // disable if StepKeys was enabled
 			}
 		}
 	} else {
-		log.Println("Pedal config not found, disabling pedals")
+		Log.WriteToLogFile("Pedal config not found, disabling pedals")
 		pedalMap = make(PedalMap)
 		if IsEnabled() {
 			ToggleEnabled() // disable if StepKeys was enabled
@@ -123,9 +124,9 @@ func LoadConfig() {
 func saveAppConfig() {
 	data, _ := json.MarshalIndent(appConfig, "", "  ")
 	if err := os.WriteFile(appConfigFilePath, data, 0644); err != nil {
-		log.Println("Failed to save app config:", err)
+		Log.WriteToLogFile("Failed to save app config: " + err.Error())
 	} else {
-		log.Println("App config saved.")
+		Log.WriteToLogFile("App config saved.")
 	}
 }
 
@@ -152,7 +153,7 @@ func ToggleEnabled() {
 
 	saveAppConfig() // make changes persistent
 
-	log.Println("StepKeys enable state was changed:", appConfig.Enabled)
+	Log.WriteToLogFile("StepKeys enable state was changed: " + strconv.FormatBool(appConfig.Enabled))
 
 	appConfigMu.Unlock()
 
@@ -181,21 +182,21 @@ func ToggleStartOnBoot() {
 	// Process changes
 	if appConfig.StartOnBoot {
 		if err := OS.EnableStartOnBoot(); err != nil {
-			log.Println("Failed to enable OS-level autostart:", err)
+			Log.WriteToLogFile("Failed to enable OS-level autostart: " + err.Error())
 			return
 		}
-		log.Println("Autostart enabled")
+		Log.WriteToLogFile("Autostart enabled")
 	} else {
 		if err := OS.DisableStartOnBoot(); err != nil {
-			log.Println("Failed to disable OS-level autostart:", err)
+			Log.WriteToLogFile("Failed to disable OS-level autostart: " + err.Error())
 			return
 		}
-		log.Println("Autostart disabled")
+		Log.WriteToLogFile("Autostart disabled")
 	}
 
 	saveAppConfig() // make changes persistent
 
-	log.Println("StepKeys start on boot state was changed:", appConfig.StartOnBoot)
+	Log.WriteToLogFile("StepKeys start on boot state was changed: " + strconv.FormatBool(appConfig.StartOnBoot))
 
 	appConfigMu.Unlock()
 
@@ -226,15 +227,15 @@ func SetPedalMap(newMap PedalMap) {
 
 	data, err := json.MarshalIndent(pedalMap, "", "  ")
 	if err != nil {
-		log.Println("Failed to encode pedal map:", err)
+		Log.WriteToLogFile("Failed to encode pedal map: " + err.Error())
 		return
 	}
 
 	if err := os.WriteFile(pedalConfigFilePath, data, 0644); err != nil {
-		log.Println("Failed to save pedal config:", err)
+		Log.WriteToLogFile("Failed to save pedal config: " + err.Error())
 	}
 
-	log.Println("Pedal map updated and saved.")
+	Log.WriteToLogFile("Pedal map updated and saved.")
 }
 
 // Returns a copy of the pedal map

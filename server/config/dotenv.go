@@ -1,12 +1,13 @@
 package config
 
 import (
-	"log"
 	"os"
 	"runtime"
 	"strconv"
 
 	"github.com/joho/godotenv"
+
+	Log "stepkeys/server/logging"
 )
 
 var _serialPort string
@@ -17,13 +18,13 @@ func LoadEnv() (baudRate int, serialPort string) {
 	// Load .env file
 	// Ignore error if missing
 	_ = godotenv.Load(".env")
-	log.Println("Environment file loaded.")
+	Log.WriteToLogFile("Environment file loaded.")
 
 	// SERIAL_PORT
 	serialPort = os.Getenv("SERIAL_PORT")
 	if serialPort == "" {
 		serialPort = defaultSerialPort()
-		log.Println("Using default for SERIAL_PORT env var:", serialPort)
+		Log.WriteToLogFile("Using default for SERIAL_PORT env var: " + serialPort)
 	}
 	_serialPort = serialPort
 
@@ -33,18 +34,18 @@ func LoadEnv() (baudRate int, serialPort string) {
 			baudRate = val
 		} else {
 			baudRate = 115200
-			log.Println("Invalid BAUD_RATE env var, using default:", baudRate)
+			Log.WriteToLogFile("Invalid BAUD_RATE env var, using default: " + strconv.Itoa(baudRate))
 		}
 	} else {
 		baudRate = 115200
-		log.Println("Using default for BAUD_RATE env var:", baudRate)
+		Log.WriteToLogFile("Using default for BAUD_RATE env var: " + strconv.Itoa(baudRate))
 	}
 
 	// VERSION
 	appVersion = os.Getenv("VERSION")
 	if appVersion == "" {
 		appVersion = "1.0.0"
-		log.Println("Using default for VERSION env var:", appVersion)
+		Log.WriteToLogFile("Using default for VERSION env var: " + appVersion)
 	}
 
 	return baudRate, serialPort
@@ -60,7 +61,8 @@ func defaultSerialPort() string {
 	case "darwin":
 		return "/dev/cu.usbmodem11301"
 	default:
-		log.Fatal("Unsupported OS")
+		Log.WriteToLogFile("Unsupported OS")
+		os.Exit(1)
 		return ""
 	}
 }

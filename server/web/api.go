@@ -2,12 +2,13 @@ package web
 
 import (
 	"encoding/json"
-	"log"
+	"fmt"
 	"net/http"
 	"os"
 	"time"
 
 	Config "stepkeys/server/config"
+	Log "stepkeys/server/logging"
 	. "stepkeys/server/pedal"
 	Updater "stepkeys/server/updater"
 )
@@ -36,7 +37,7 @@ type StringResponse struct {
 
 // Helper: construct and send JSON error response
 func writeJSONError(w http.ResponseWriter, status int, msg string) {
-	w.Header().Set("Content-Type", "application/json")
+	w.Header().Set(contentType, contentTypeJson)
 	w.WriteHeader(status)
 	_ = json.NewEncoder(w).Encode(ErrorResponse{
 		Status:       status,
@@ -179,6 +180,21 @@ func getSerialDeviceName(w http.ResponseWriter, _ *http.Request) {
 
 }
 
+// @Summary      Get current session logs
+// @Description  Returns the log lines from the current session.
+// @Tags         additional
+// @Produce      text/plain
+// @Success      200 {string} string "Log content"
+// @Router       /api/logs [get]
+func LogsInitialHandler(w http.ResponseWriter, _ *http.Request) {
+	logLines := Log.ReadCurrentSessionLogs()
+
+	w.Header().Set(contentType, "text/plain")
+	for _, line := range logLines {
+		_, _ = fmt.Fprintln(w, line)
+	}
+}
+
 // Registers all API routes
 func RegisterAPI() {
 	http.HandleFunc("/api/pedals", func(w http.ResponseWriter, r *http.Request) {
@@ -238,5 +254,15 @@ func RegisterAPI() {
 		getSerialDeviceName(w, r)
 	})
 
-	log.Println("API routes registered.")
+	http.HandleFunc("/api/logs", func(w http.ResponseWriter, r *http.Request) {
+		if r.Method != http.MethodGet {
+			writeJSONError(w, http.StatusMethodNotAllowed, methodNotAllowed)
+			return
+		}
+		LogsInitialHandler(w, r)
+	})
+
+	http.HandleFunc("/ws/logs", Log.LogsWebSocketHandler)
+
+	Log.WriteToLogFile("API routes registered.")
 }
