@@ -162,6 +162,9 @@ func ToggleEnabled() {
 	case enabledChanged <- stateSnapshot:
 	default:
 	}
+
+	// Notify WebSocket clients
+	BroadcastSetting("enabled", IsEnabled())
 }
 
 // Returns if start on boot is enabled
@@ -205,6 +208,9 @@ func ToggleStartOnBoot() {
 	case startOnBootChanged <- startOnBootSnapshot:
 	default:
 	}
+
+	// Notify WebSocket clients
+	BroadcastSetting("boot", IsStartOnBootEnabled())
 }
 
 // Returns the port for the web server

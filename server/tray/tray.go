@@ -29,6 +29,7 @@ func TrayOnReady() {
 	menuStart := systray.AddMenuItemCheckbox("Start on boot", "", Config.IsStartOnBootEnabled())
 	systray.AddSeparator()
 	menuApiDocs := systray.AddMenuItem("API Docs", "")
+	menuWsDocs := systray.AddMenuItem("WebSocket Docs", "")
 	menuDocs := systray.AddMenuItem("Docs", "")
 	systray.AddSeparator()
 	menuQuit := systray.AddMenuItem("Quit", "")
@@ -82,6 +83,11 @@ func TrayOnReady() {
 			case <-menuApiDocs.ClickedCh:
 				menuApiDocs.Uncheck()
 				openBrowser(fmt.Sprintf("http://localhost:%d/api/docs", Config.GetWebPort()))
+
+			// Open WebSocket Docs page
+			case <-menuWsDocs.ClickedCh:
+				menuWsDocs.Uncheck()
+				openBrowser("https://github.com/BrNi05/StepKeys/blob/main/WebSocketDocs.md")
 
 			// Open StepKeys GitHub page
 			case <-menuDocs.ClickedCh:

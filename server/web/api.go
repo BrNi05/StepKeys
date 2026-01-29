@@ -262,7 +262,9 @@ func RegisterAPI() {
 		LogsInitialHandler(w, r)
 	})
 
+	// WebSocket endpoints
 	http.HandleFunc("/ws/logs", Log.LogsWebSocketHandler)
+	http.HandleFunc("/ws/settings", Config.SettingsWebSocketHandler)
 
 	Log.WriteToLogFile("API routes registered.")
 }
