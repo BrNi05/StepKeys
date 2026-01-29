@@ -23,7 +23,7 @@ func CheckForUpdates() {
 
 	// Skip version check if disabled
 	if os.Getenv("NO_VERSION_CHECK") != "" {
-		Log.WriteToLogFile("Version check is disabled.")
+		Log.WriteToLogFile("Version checks are disabled by NO_VERSION_CHECK environment variable. Skipping update check.")
 		updateAvailable = false
 		return
 	}
