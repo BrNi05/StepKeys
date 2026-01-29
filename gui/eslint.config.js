@@ -1,6 +1,7 @@
 import { defineConfig } from 'eslint/config';
 import js from '@eslint/js';
 import vuePlugin from 'eslint-plugin-vue';
+import vueParser from 'vue-eslint-parser';
 import prettierPlugin from 'eslint-plugin-prettier';
 import tsParser from '@typescript-eslint/parser';
 import globals from 'globals';
@@ -12,11 +13,17 @@ const __dirname = path.dirname(__filename);
 
 export default defineConfig([
   js.configs.recommended,
+
+  ...vuePlugin.configs['flat/recommended'],
+
   {
     files: ['**/*.{ts,tsx,vue}'],
+    
     languageOptions: {
-      parser: tsParser,
+      parser: vueParser, 
+      
       parserOptions: {
+        parser: tsParser,
         project: [path.join(__dirname, 'tsconfig.json'), path.join(__dirname, 'tsconfig.eslint.json')],
         tsconfigRootDir: __dirname,
         extraFileExtensions: ['.vue'],
@@ -27,11 +34,16 @@ export default defineConfig([
         ...globals.node,
       },
     },
+    plugins: {
+      prettier: prettierPlugin,
+    },
+    rules: {
+      'prettier/prettier': 'warn',
+    },
   },
+
   {
     files: ['**/*.vue'],
-    plugins: { vue: vuePlugin },
-    extends: vuePlugin.configs['flat/recommended'],
     rules: {
       'vue/html-indent': ['warn', 2],
       'vue/max-attributes-per-line': ['warn', { singleline: 3 }],
@@ -50,22 +62,18 @@ export default defineConfig([
         },
       ],
       'vue/script-indent': 'off',
-      'prettier/prettier': ['warn'],
     },
   },
-  {
-    files: ['**/*.{js,ts,vue}'],
-    plugins: { prettier: prettierPlugin },
-    rules: { 'prettier/prettier': 'warn' },
-  },
+
   {
     ignores: ['dist/**', 'node_modules/**'],
   },
+
   {
     files: ['vite.config.ts', 'uno.config.ts'],
     languageOptions: {
       parser: tsParser,
-      parserOptions: { project: undefined },
+      parserOptions: { project: null },
     },
   },
 ]);
