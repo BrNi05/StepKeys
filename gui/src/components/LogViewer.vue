@@ -2,7 +2,7 @@
   <div class="flex flex-col rounded-xl border border-gray-800 bg-gray-900 overflow-hidden h-full">
     <!-- Title Bar -->
     <div class="h-10 px-4 flex items-center border-b border-gray-800 bg-gray-900/80">
-      <span class="text-sm font-semibold tracking-wide text-gray-200"> StepKeys Log Viewer </span>
+      <span class="text-sm font-semibold tracking-wide text-gray-200"> Log Viewer </span>
     </div>
 
     <!-- Content -->
@@ -11,10 +11,16 @@
       <div class="h-2"></div>
 
       <!-- Logs -->
-      <div class="px-3">
-        <div v-for="(line, index) in logs" :key="index" class="text-gray-100 mb-2">
-          {{ line }}
-        </div>
+      <div v-for="(line, index) in logs" :key="index" class="mb-2 pl-3 pr-2">
+        <!-- Timestamp -->
+        <span class="text-yellow-400 font-mono">
+          {{ line.slice(0, 19) }}
+        </span>
+
+        <!-- Message -->
+        <span class="ml-2 text-gray-100 font-mono">
+          {{ line.slice(20) }}
+        </span>
       </div>
 
       <!-- Bottom spacer -->
@@ -56,7 +62,7 @@
   // Initial logs fetch
   const fetchInitialLogs = async () => {
     try {
-      logs.value = (await axios.get('/api/logs')).data.split('\n');
+      logs.value = (await axios.get('/api/logs')).data.split('\n').filter((line: string) => line.trim() !== '');
 
       nextTick(() => scrollToBottom());
     } catch (err) {
