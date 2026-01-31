@@ -28,9 +28,9 @@ func TrayOnReady() {
 	menuEnabled := systray.AddMenuItemCheckbox("Enabled", "", Config.IsEnabled())
 	menuStart := systray.AddMenuItemCheckbox("Start on boot", "", Config.IsStartOnBootEnabled())
 	systray.AddSeparator()
+	menuDocs := systray.AddMenuItem("Docs", "")
 	menuApiDocs := systray.AddMenuItem("API Docs", "")
 	menuWsDocs := systray.AddMenuItem("WebSocket Docs", "")
-	menuDocs := systray.AddMenuItem("Docs", "")
 	systray.AddSeparator()
 	menuQuit := systray.AddMenuItem("Quit", "")
 
@@ -79,6 +79,11 @@ func TrayOnReady() {
 					menuStart.Uncheck()
 				}
 
+			// Open StepKeys GitHub page (README)
+			case <-menuDocs.ClickedCh:
+				menuDocs.Uncheck()
+				openBrowser("https://github.com/BrNi05/StepKeys/blob/main/README.md")
+
 			// Open API Docs page
 			case <-menuApiDocs.ClickedCh:
 				menuApiDocs.Uncheck()
@@ -88,11 +93,6 @@ func TrayOnReady() {
 			case <-menuWsDocs.ClickedCh:
 				menuWsDocs.Uncheck()
 				openBrowser("https://github.com/BrNi05/StepKeys/blob/main/WebSocketDocs.md")
-
-			// Open StepKeys GitHub page
-			case <-menuDocs.ClickedCh:
-				menuDocs.Uncheck()
-				openBrowser("https://github.com/BrNi05/StepKeys?tab=readme-ov-file")
 
 			// Quit StepKeys
 			case <-menuQuit.ClickedCh:
