@@ -231,6 +231,9 @@ func SetPedalMap(newMap PedalMap) {
 	// Update the pedal map copy in the handler package
 	Handler.UpdatePedalMap(newMap)
 
+	// Notify websocket clients
+	NotifyPedalMapUpdate()
+
 	data, err := json.MarshalIndent(pedalMap, "", "  ")
 	if err != nil {
 		Log.WriteToLogFile("Failed to encode pedal map: " + err.Error())

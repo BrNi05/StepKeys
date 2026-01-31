@@ -11,10 +11,7 @@ var (
 	clients   = make(map[*websocket.Conn]bool)
 	clientsMu sync.Mutex
 	upgrader  = websocket.Upgrader{
-		CheckOrigin: func(r *http.Request) bool {
-			origin := r.Header.Get("Origin")
-			return origin == "http://localhost:18000" || origin == "http://127.0.0.1:18000"
-		},
+		CheckOrigin: func(r *http.Request) bool { return true },
 	}
 )
 

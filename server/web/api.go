@@ -10,6 +10,7 @@ import (
 	Config "stepkeys/server/config"
 	Log "stepkeys/server/logging"
 	. "stepkeys/server/pedal"
+	Pedal "stepkeys/server/pedal"
 	Updater "stepkeys/server/updater"
 )
 
@@ -195,6 +196,22 @@ func LogsInitialHandler(w http.ResponseWriter, _ *http.Request) {
 	}
 }
 
+// @Summary      Get the list of keys that can be used in pedal actions
+// @Description  Returns the list of keys that StepKeys (RobotGo) supports.
+// @Tags         additional
+// @Produce      json
+// @Success      200 {array} string
+// @Router       /api/valid-keys [get]
+func getValidKeys(w http.ResponseWriter, _ *http.Request) {
+	keys := make([]string, 0, len(Pedal.ValidKeys))
+	for k := range Pedal.ValidKeys {
+		keys = append(keys, k)
+	}
+
+	w.Header().Set(contentType, contentTypeJson)
+	_ = json.NewEncoder(w).Encode(keys)
+}
+
 // Registers all API routes
 func RegisterAPI() {
 	http.HandleFunc("/api/pedals", func(w http.ResponseWriter, r *http.Request) {
@@ -262,9 +279,18 @@ func RegisterAPI() {
 		LogsInitialHandler(w, r)
 	})
 
+	http.HandleFunc("/api/valid-keys", func(w http.ResponseWriter, r *http.Request) {
+		if r.Method != http.MethodGet {
+			writeJSONError(w, http.StatusMethodNotAllowed, methodNotAllowed)
+			return
+		}
+		getValidKeys(w, r)
+	})
+
 	// WebSocket endpoints
 	http.HandleFunc("/ws/logs", Log.LogsWebSocketHandler)
 	http.HandleFunc("/ws/settings", Config.SettingsWebSocketHandler)
+	http.HandleFunc("/ws/pedals", Config.PedalWebSocketHandler)
 
 	Log.WriteToLogFile("API routes registered.")
 }

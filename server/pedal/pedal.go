@@ -57,21 +57,12 @@ func isValidBehaviour(behaviour PedalBehaviour) bool {
 // Supported: https://github.com/go-vgo/robotgo/blob/master/docs/keys.md#keys
 func isValidKeys(keys []string) bool {
 	for _, key := range keys {
-		// Single-character keys: A-Z, a-z, 0-9
-		if len(key) == 1 {
-			r := rune(key[0])
-			if (r >= 'a' && r <= 'z') ||
-				(r >= 'A' && r <= 'Z') ||
-				(r >= '0' && r <= '9') {
-				continue
-			}
-			return false
-		}
-
-		if _, ok := validNamedKeys[key]; !ok {
+		if _, ok := ValidKeys[key]; !ok {
 			return false
 		}
 	}
+
+	// All keys were found to be valid
 	return true
 }
 
