@@ -107,7 +107,7 @@ func LoadConfig() {
 			}
 		}
 	} else {
-		Log.WriteToLogFile("Pedal config not found, disabling pedals")
+		Log.WriteToLogFile("Pedal config not found, disabling pedals.")
 		pedalMap = make(PedalMap)
 		if IsEnabled() {
 			ToggleEnabled() // disable if StepKeys was enabled
