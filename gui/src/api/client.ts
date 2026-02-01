@@ -19,6 +19,7 @@ export const quitApp = () => api.post('/quit');
 // Additional
 export const getSerial = () => api.get('/serial');
 export const getLogs = () => api.get('/logs');
+export const getValidKeys = () => api.get('/valid-keys');
 
 // Pedals
 export const getPedals = () => api.get('/pedals');
@@ -30,7 +31,7 @@ export async function setPedals(pedals: any) {
     return {
       ok: false,
       // Order of precedence: server error message, axios error message, fallback message
-      message: err?.response?.data?.errorMessage || err?.message || 'Unknown error',
+      message: err?.response?.data?.errorMessage || err?.message || 'Unknown API call error',
     };
   }
 }
