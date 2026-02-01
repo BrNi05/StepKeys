@@ -1,15 +1,15 @@
 <template>
   <div class="flex-1 flex flex-col rounded-xl border border-gray-800 bg-gray-900 overflow-hidden">
     <!-- Pedal Entries -->
-    <div class="flex-1 overflow-auto p-4 space-y-4">
-      <PedalEntry
-        v-for="(_, pedalID) in pedals"
-        :id="String(pedalID)"
-        :key="pedalID"
-        v-model="pedals[pedalID]!"
-        :valid-keys="validKeys"
-        @remove="removePedal(String(pedalID))"
-      />
+    <div ref="scrollContainer" class="flex-1 overflow-auto p-4 space-y-4">
+      <div v-for="(_, pedalID) in pedals" :id="'pedal-' + pedalID" :key="pedalID">
+        <PedalEntry
+          :id="String(pedalID)"
+          v-model="pedals[pedalID]!"
+          :valid-keys="validKeys"
+          @remove="removePedal(String(pedalID))"
+        />
+      </div>
     </div>
 
     <!-- Pedal Editor menu bar -->
@@ -64,7 +64,7 @@
 </template>
 
 <script setup lang="ts">
-  import { ref, onMounted } from 'vue';
+  import { ref, onMounted, nextTick } from 'vue';
   import { getPedals, setPedals, getValidKeys } from '@/api/client';
   import PedalEntry from './generic/PedalEntry.vue';
   import type { PedalAction } from '@/interfaces/pedal';
@@ -77,6 +77,9 @@
 
   // Profile name for saving/loading configs
   const profileName = ref('');
+
+  // Reference to the PedalEntry holder scrollable container
+  const scrollContainer = ref<HTMLElement | null>(null);
 
   // Load pedals from backend and overwrite current state
   const loadPedals = async () => {
@@ -95,24 +98,32 @@
   };
 
   // Add a new pedal with the lowest available ID
-  const addPedal = () => {
+  const addPedal = async () => {
     const used = Object.keys(pedals.value)
       .map(Number)
       .filter(Number.isInteger)
       .sort((a, b) => a - b);
 
-    let nextID = 0;
+    let nextID = 0; // smallest available ID
     for (const id of used) {
       if (id === nextID) nextID++;
       else break;
     }
 
-    // Set a logical default
-    pedals.value[String(nextID)] = {
+    const idString = String(nextID);
+
+    // Logical default
+    pedals.value[idString] = {
       mode: 'combo',
       behaviour: 'oneshot',
       keys: [],
     };
+
+    await nextTick(); // wait for DOM update
+
+    // Find the wrapper and scroll to it
+    const newElement = scrollContainer.value?.querySelector(`#pedal-${idString}`);
+    newElement?.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
   };
 
   const removePedal = (id: string) => {
