@@ -18,6 +18,7 @@ func StartGUI() {
 	subFS, err := fs.Sub(guiFS, "gui")
 	if err != nil {
 		Log.ErrorToLogFile(fmt.Sprintf("Failed to start webGUI: %v", err))
+		return
 	}
 
 	http.Handle("/", http.FileServer(http.FS(subFS)))

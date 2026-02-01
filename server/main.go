@@ -5,7 +5,7 @@ import (
 
 	Config "stepkeys/server/config"
 	Handler "stepkeys/server/handler"
-	Logging "stepkeys/server/logging"
+	Log "stepkeys/server/logging"
 	OS "stepkeys/server/os"
 	Tray "stepkeys/server/tray"
 	Updater "stepkeys/server/updater"
@@ -17,7 +17,10 @@ func main() {
 	execDir := OS.GetExeDir()
 
 	// Log to file with formatting
-	Logging.SetupLogging(execDir)
+	Log.SetupLogging(execDir)
+
+	// Intercept shutdown signals to log external shutdown events
+	OS.InterceptShutdown()
 
 	// Load .env or use defaults
 	baudRate, serialPort := Config.LoadEnv()
@@ -41,10 +44,10 @@ func main() {
 	// If StepKeys is not enabled, the listener will not process any events
 	go func() {
 		if err := Handler.ListenSerial(baudRate, serialPort); err != nil {
-			Logging.WriteToLogFile("Serial listener disabled: " + err.Error())
+			Log.WriteToLogFile("Serial listener disabled: " + err.Error())
 		}
 	}()
 
-	// Start tray menu
+	// Start tray menu (blocking call)
 	systray.Run(Tray.TrayOnReady, Tray.TrayOnExit)
 }

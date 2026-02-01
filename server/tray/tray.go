@@ -3,7 +3,6 @@ package tray
 import (
 	_ "embed"
 	"fmt"
-	"os"
 
 	"github.com/getlantern/systray"
 	"github.com/pkg/browser"
@@ -17,7 +16,7 @@ import (
 var iconBytes []byte
 
 func TrayOnReady() {
-	Log.WriteToLogFile("StepKeys tray menu is initialized.")
+	Log.WriteToLogFile("Tray menu is initialized.")
 
 	systray.SetTitle("")
 	systray.SetTooltip("StepKeys Server")
@@ -98,7 +97,6 @@ func TrayOnReady() {
 			case <-menuQuit.ClickedCh:
 				menuQuit.Uncheck()
 				systray.Quit()
-				os.Exit(0)
 			}
 		}
 	}()
@@ -125,7 +123,12 @@ func TrayOnReady() {
 	}()
 }
 
-func TrayOnExit() { Log.WriteToLogFile("StepKeys server is shutting down.") }
+// Called when StepKeys is exiting
+// Only takes effect when systray is already loaded
+func TrayOnExit() {
+	Log.WriteToLogFile("Tray menu is exiting.")
+	Log.WriteToLogFile("StepKeys is shutting down.")
+}
 
 // Browser open helper
 func openBrowser(url string) {

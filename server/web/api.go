@@ -4,8 +4,9 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/http"
-	"os"
 	"time"
+
+	"github.com/getlantern/systray"
 
 	Config "stepkeys/server/config"
 	Log "stepkeys/server/logging"
@@ -147,7 +148,7 @@ func quitApp(w http.ResponseWriter, _ *http.Request) {
 
 	go func() {
 		time.Sleep(500 * time.Millisecond)
-		os.Exit(0)
+		systray.Quit()
 	}()
 }
 

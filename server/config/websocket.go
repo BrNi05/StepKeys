@@ -40,7 +40,7 @@ func BroadcastSetting(event string, value bool) {
 func SettingsWebSocketHandler(w http.ResponseWriter, r *http.Request) {
 	conn, err := upgrader.Upgrade(w, r, nil)
 	if err != nil {
-		Log.ErrorToLogFile("Settings WebSocket upgrade error: " + err.Error()) // fatal
+		Log.WriteToLogFile("Settings WebSocket upgrade error: " + err.Error())
 	}
 
 	settingsClientsMu.Lock()
@@ -77,7 +77,7 @@ func NotifyPedalMapUpdate() {
 func PedalWebSocketHandler(w http.ResponseWriter, r *http.Request) {
 	conn, err := upgrader.Upgrade(w, r, nil)
 	if err != nil {
-		Log.ErrorToLogFile("Pedals WebSocket upgrade error: " + err.Error())
+		Log.WriteToLogFile("Pedals WebSocket upgrade error: " + err.Error())
 		return
 	}
 

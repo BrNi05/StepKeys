@@ -61,9 +61,8 @@ func defaultSerialPort() string {
 	case "darwin":
 		return "/dev/cu.usbmodem11301"
 	default:
-		Log.WriteToLogFile("Unsupported OS")
-		os.Exit(1)
-		return ""
+		Log.WriteToLogFile("Unsupported OS detected.")
+		return "unknown"
 	}
 }
 

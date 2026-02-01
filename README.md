@@ -159,7 +159,7 @@ StepKeys includes a built-in GUI that opens in your preferred browser.
 > One can create a custom GUI, since the built-in is powered entirely by the public API and WebSockets. It wouldn't take much effort to create a native appearance for StepKeys ([WebView](https://github.com/webview/webview_go)), but I consider opening in browser more reliable.
 
 > [!IMPORTANT]
-> By default, StepKeys server uses port **18000**. In case of a conflit, it is suggested to modfiy existing port mappings, as StepKeys does not (yet) provide a dedicated, easy to use port override option.
+> By default, StepKeys server uses port **18000**. In case of a conflit, you can modfiy your existing port mappings or assign an other port for StepKeys in the **config.json** file.
 
 You can open the GUI from the tray or [here](http://localhost:18000/). You will notice it follows a fairly standard and clean approach. There is a top and a bottom (lower) menu bar, and two side-by-side windows.
 
@@ -224,6 +224,12 @@ StepKeys enforces limitations of **RobotGo**, that is an amazing third party lib
 
 > [!TIP]
 For more complex operations, you may need to use the WebSockets provided by the StepKeys server. See the [documentation](https://github.com/BrNi05/StepKeys/blob/main/WebSocketDocs.md) for details.
+
+## Technical notes
+
+StepKeys logs with moderate verbosity and handles most runtime errors. It assumes the user is familiar with the app and does NOT guard against deliberate misuse.
+
+StepKeys behaves differently from other programs regarding its lifecycle. It always exits with code 0, even if execution is halted due to a handled error. During app startup, the shutdown process can be fragile for a few milliseconds, since it depends on the system tray, which may not yet be initialized. However, given StepKeys’ small scope and the testing that has been performed, such issues are expected to be extremely rare.
 
 ## Set up project
 

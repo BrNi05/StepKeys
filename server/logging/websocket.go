@@ -34,7 +34,7 @@ func broadcastLog(message string) {
 func LogsWebSocketHandler(w http.ResponseWriter, r *http.Request) {
 	conn, err := upgrader.Upgrade(w, r, nil)
 	if err != nil {
-		ErrorToLogFile("Logs WebSocket upgrade error: " + err.Error()) // fatal
+		WriteToLogFile("Logs WebSocket upgrade error: " + err.Error()) // fatal
 	}
 
 	clientsMu.Lock()

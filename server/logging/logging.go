@@ -6,13 +6,19 @@ import (
 	"os"
 	"path/filepath"
 	"strings"
+	"sync"
 	"time"
+
+	"github.com/getlantern/systray"
 )
 
 const sessionStartMarker = "StepKeys started."
 
 // List of all log entries that was written to file
-var logs []string
+var (
+	logs      []string
+	logsMutex sync.Mutex
+)
 
 func SetupLogging(execDir string) {
 	logFilePath := filepath.Join(execDir, "stepkeys.log")
@@ -30,7 +36,7 @@ func SetupLogging(execDir string) {
 	log.SetFlags(log.LstdFlags)
 
 	// Start logging session
-	WriteToLogFile("\n" + sessionStartMarker)
+	WriteToLogFile(sessionStartMarker)
 
 	if resetted {
 		WriteToLogFile("Old log file was reset and a new was opened.")
@@ -45,13 +51,17 @@ func WriteToLogFile(message string) {
 	timestamp := time.Now().Format("2006/01/02 15:04:05")
 	line := fmt.Sprintf("%s %s", timestamp, message)
 
+	logsMutex.Lock()
+	defer logsMutex.Unlock()
+
 	broadcastLog(line)        // broadcast to WebSocket clients (GUI)
 	logs = append(logs, line) // store in memory, used by API
 }
 
+// Logs an error message and shuts down the application
 func ErrorToLogFile(message string) {
 	WriteToLogFile(message)
-	os.Exit(1)
+	systray.Quit()
 }
 
 // Called once a log file gets too big (4 MB)
@@ -85,5 +95,7 @@ func isLogFileTooBig(logFilePath string, maxSizeMegabytes int64) bool {
 // Reads the whole log file and returns only the lines from the current session
 // Used by the API to serve log content (on initial GUI load)
 func ReadCurrentSessionLogs() []string {
+	logsMutex.Lock()
+	defer logsMutex.Unlock()
 	return logs
 }
