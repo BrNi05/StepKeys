@@ -1,14 +1,13 @@
 # StepKeys
 
-StepKeys is a cross-platform pedal-based input system that maps physical footswitches to keyboard actions, sequences, and combos.
+**StepKeys is a fully-featured, cross-platform pedal-based input system that maps physical footswitches to keyboard actions, sequences, and combos.**
 
 > [!WARNING]
-> StepKeys is currently in beta and may have some bugs. Please take this into account when using it.
+> StepKeys is currently in **beta** and may contain some minor bugs. Please keep this in mind when using it. If you encounter any issues, feel free to open an issue.
 
 ## Motivation
 
-Human interaction with computers is almost always limited to hands - keyboards, mice, MIDI controllers, touchscreens, all follow the same paradigm.
-But interaction design shouldn’t follow hardware traditions - it should follow human capabilities.
+Human interaction with computers is almost always limited to hands - keyboards, mice, MIDI controllers, touchscreens, etc. All follow the same paradigm. But interaction design shouldn’t follow hardware traditions - it should follow human capabilities.
 
 Pedals (footswitches) introduce a third interaction channel. An independent and parallel one. This enables actions that would otherwise compete with typing, aiming, or mouse movement. It creates new interaction patterns through a new form of input, greatly enhancing accessibility and productivity.
 
@@ -16,9 +15,9 @@ Pedals (footswitches) introduce a third interaction channel. An independent and 
 
 - Trigger complex key combinations with a single press
 
-- Type letters, words, or full strings instantly
+- Type letters, words, or full strings instantly with foot
 
-- Hold keys till later pedal input
+- Hold keys till later pedal input or release
 
 - Bind game mechanics, abilities, or macros to pedals
 
@@ -38,23 +37,25 @@ Pedals (footswitches) introduce a third interaction channel. An independent and 
 
 - Trigger single keys, key combinations, or sequences of key presses
 
-- Graphical interface for pedal assignment configuration
+- Modern graphical interface for pedal assignment configuration
 
 - System tray menu for quick access
 
 - Detailed logging of errors and operations
 
-- Public API with documentation for third-party integrations
+- Public API and WebSockets with detailed documentation for third-party integrations
 
 - Cross-platform: Windows, Linux, macOS
 
 - Lightweight and portable binary builds
 
+- Easy-to-set-up project repo
+
 ## Hardware
 
-StepKeys is designed in a way that the (external) hardware can be easily replaced or substituted with products from other vendors. The software monitors a serial port and listens for incoming bytes that identify a footswitch and press/release event.
+StepKeys is designed in a way that the (external) hardware can be easily replaced or substituted with products from other vendors. The software monitors a serial port and listens for incoming bytes that identify a footswitch and a press or release event.
 
-**The original implementation:**
+**The original (reference) implementation:**
 
 - **External MCU:** Arduino Leonardo
 
@@ -68,17 +69,20 @@ StepKeys is designed in a way that the (external) hardware can be easily replace
 >
 > StepKeys expects momentary switches. For other types, the MCU code must simulate momentary presses. Even the cheapest ones from Aliexpress will do the job.
 
-- **Wiring between the MCU and footswitches:** CAT cable (preferably CAT6 for better shielding)
+- **Wiring between the MCU and footswitches:** CAT cable (preferably CAT6 for better shielding). +5V and GND should be distributed from a common split point (star topology).
 
 - The **MCU code** must:
 
   - Follow the protocol described [here](https://github.com/BrNi05/StepKeys/blob/main/arduino/code/stepkeys.ino#L44)
   - Send data as single, raw bytes
-  - Include some kind of debounce mechanism
+  - Include some kind of debounce mechanism (even if the footswitches supposedly have it built-in)
   - Specify a baud rate (default: 115200), which should match the value in the `.env` file.
 
 > [!WARNING]
 > Due to the protocol used, the maximum number of pedals supported is 128 (0-127).
+
+> [!WARNING]
+> Wire the pedals to the MCU using consecutive Arduino pins (the pins must follow each other). You can use StepKeys with phantom pedals in your configuration, but it’s cleaner to wire them in order.
 
 ## How to set up StepKeys
 
@@ -98,7 +102,7 @@ iwr -useb https://raw.githubusercontent.com/BrNi05/StepKeys/main/release/windows
 
 ## How to update StepKeys
 
-StepKeys includes a built-in version manager and will notify you whenever an update is available.
+StepKeys includes a built-in version manager and will notify you whenever an update is available. You will be redirected to the release page, where you will find links to this section of the README.
 
 ### Linux / macOS
 
@@ -118,34 +122,95 @@ iwr -useb https://raw.githubusercontent.com/BrNi05/StepKeys/main/release/windows
 
 StepKeys comes with a tray menu, which is the main interface you’ll use most of the time - aside from the pedals, of course.
 
-- **Open:** opens StepKeys webGUI
+- **Open:** opens StepKeys webGUI.
 
 > [!TIP]
 > If an update is available, this menu item will show as: **Open (Update Available)**.
 
-- **Enabled:** ticked if StepKeys is enabled ankvd listening on the serial port
+- **Enabled:** ticked if StepKeys is enabled ankvd listening on the serial port.
 
 > [!IMPORTANT]
 > StepKeys cannot be enabled if there is no pedal configuration created yet.
 >
 > If StepKeys cannot open the serial port, the enabled status won't have an effect on functionality as serial listening will be disabled until a restart.
 
-- **Start on boot:** toggles whether StepKeys should start on boot or not
+- **Start on boot:** toggles whether StepKeys should start on boot or not.
 
-- **API Docs:** opens the StepKeys API documentation (Swagger)
+- **Docs:** opens the GitHub page of Stepkeys and shows this README.
 
-- **Docs:** opens the GitHub page of stepkeys and shows this readme
+- **API Docs:** opens the StepKeys API documentation (Swagger).
 
-- **Quit:** terminates StepKeys process
+- **WebSocket Docs:** opens the [documentation](https://github.com/BrNi05/StepKeys/blob/main/WebSocketDocs.md) of WebSockets used by StepKeys.
+
+- **Quit:** terminates StepKeys process.
 
 ### webGUI
 
-StepKeys includes a built-in GUI that opens in your browser.
+StepKeys includes a built-in GUI that opens in your preferred browser.
+
+<br />
+
+<img width="1708" height="909" alt="image"
+     src="https://github.com/user-attachments/assets/f4f37408-413b-4767-9273-65f872c01457" />
+
+<br />
 
 > [!TIP]
-> One can create a custom GUI, since the built-in is powered entirely by the public API.
+> One can create a custom GUI, since the built-in is powered entirely by the public API and WebSockets. It wouldn't take much effort to create a native appearance for StepKeys ([WebView](https://github.com/webview/webview_go)), but I consider opening in browser more reliable.
 
-...
+> [!IMPORTANT]
+> By default, StepKeys server uses port **18000**. In case of a conflit, it is suggested to modfiy existing port mappings, as StepKeys does not (yet) provide a dedicated, easy to use port override option.
+
+You can open the GUI from the tray or [here](http://localhost:18000/). You will notice it follows a fairly standard and clean approach. There is a top and a bottom (lower) menu bar, and two side-by-side windows.
+
+### Top menu bar
+
+- **Enabled toggle:** shows the enabled status. It will not toggle on, if there is no (internal) pedal map set.
+
+- **Start on boot toggle:** shows and toggles start on boot state.
+
+- **GitHub icon:** opens the GitHub repo of StepKeys.
+
+### Bottom menu bar
+
+- **Serial display:** shows the serial port (Windows) or device file (macOS/Linux) that StepKeys is using or attempted to use.
+
+- **Check for updates / Update available:** depending on availability, one button will appear. **Check for updates** forces StepKeys to look for updates again (it automatically checks on app startup).
+
+### Log Viewer
+
+This is an extremely useful feature of the webGUI. It displays all server logs that were generated after app startup. These logs are persistent, as they are logged to file as well.
+
+> [!IMPORTANT]
+> The webGUI may sometimes log to browser console. These are not displayed here as such logs are supposed to be rare and technical.
+
+> [!TIP]
+> If you are unsure about the physical order of your pedals, just use the **Log Viewer**, as it will display all pedal actions in realtime.
+
+### Pedal Configurator
+
+This is probably the most important feature of the GUI and has quite a few UI elements.
+
+The configurator window has a dedicated lower menu bar:
+
+- **Reset:** discard all changes made on the GUI and reload the saved pedal config.
+
+- **Input field (Profile name):** assign a name for the current config.
+
+- **Save Config:** save the current webGUI config (with the assigned name).
+
+- **Load config:** browse and load a saved StepKeys pedal map config.
+
+- **Apply:** send the current changes to backend and apply them.
+
+Once you have at least one pedal in the configurator, you will see the pedal cards. These represent a pedal and an assigned action. The **Add Pedal** button always adds the smallest indexed pedal possible, this is the reason for the consecutive wiring.
+
+On a pedal card you can see its ID, a button to **remove** it from the configurator, a **mode** and **behaviour** dropdown and the keys assignment input field. Added keys appear to the left to it, with an **X** button to remove them.
+
+There are quite a few assistive mechanisms in place. If you start typing a key, suggestions will appear. You can navigate with the **arrow keys** and accept the selected with **Space** or **Enter**. When no characters are typed, use **Backspace** to remove the last added key.
+
+> [!IMPORTANT]
+> StepKeys server tracks and knows about one config (profile). It does not natively include profile management. However, the webGUI has such feature. When saving a profile, the state of the webGUI is saved, which might not match the loaded profile (internal state).
 
 ## StepKeys API
 
@@ -153,9 +218,12 @@ The shipped binaries contain both the API code and the API documentation that is
 
 The API provides an alternative way to interact with StepKeys, but it is not intended to satisfy every technical expectation one might have of an API. StepKeys is primarily controlled through the system tray menu and the included GUI, which handle certain tasks that would otherwise fall under the API’s responsibilities.
 
-For example, toggle operations handle errors silently, meaning a HTTP200 response code is sent even if the toggling failed. Since such errors are expected to be rare and the API response includes the boolean value that was supposed to be toggled (so success can be infered from historic and current value), this approach is not a limitation, just a different way of working with an API.
+For example, toggle operations handle errors silently, meaning a **HTTP200** response code is sent even if the toggling failed. Since such errors are expected to be rare, and the API response includes the boolean value that was supposed to be toggled (so success can be infered from historic and current value), this approach is not a limitation, just a different way of working with an API.
 
 StepKeys enforces limitations of **RobotGo**, that is an amazing third party lib which interacts with the OS to press keys. The GUI will provide visual aid for supported keys, while API users can refer to the [official docs](https://github.com/go-vgo/robotgo/blob/master/docs/keys.md#keys) or the StepKeys [support list](https://github.com/BrNi05/StepKeys/blob/main/server/pedal/supported_keys.go).
+
+> [!TIP]
+For more complex operations, you may need to use the WebSockets provided by the StepKeys server. See the [documentation](https://github.com/BrNi05/StepKeys/blob/main/WebSocketDocs.md) for details.
 
 ## Set up project
 
@@ -184,11 +252,12 @@ go get github.com/pkg/browser
 go get github.com/joho/godotenv
 go get github.com/swaggo/swag
 go get github.com/swaggo/http-swagger
+go get github.com/gorilla/websocket
 
 go mod tidy
 
 cd gui
-npm install # the GUI needs a node and npm to be installed
+npm install # the GUI needs node and npm to be installed
 ```
 
 > [!IMPORTANT]
