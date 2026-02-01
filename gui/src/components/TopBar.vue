@@ -49,13 +49,11 @@
   const boot = ref(false);
 
   const toggleEnabledState = async () => {
-    await toggleEnabled(); // silent failure can happen
-    enabled.value = (await getEnabled()).data.value;
+    enabled.value = (await toggleEnabled()).data.value; // silent failure can happen
   };
 
   const toggleBootState = async () => {
-    await toggleBoot(); // silent failure can happen
-    boot.value = (await getBoot()).data.value;
+    boot.value = (await toggleBoot()).data.value; // silent failure can happen
   };
 
   const setupWebSocket = () => {
