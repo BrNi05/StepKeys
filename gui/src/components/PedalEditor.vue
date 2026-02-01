@@ -96,8 +96,6 @@
 
   // Add a new pedal with the lowest available ID
   const addPedal = () => {
-    globalThis.getSelection()?.removeAllRanges();
-
     const used = Object.keys(pedals.value)
       .map(Number)
       .filter(Number.isInteger)

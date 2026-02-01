@@ -9,6 +9,10 @@ html, body, #app {
   font-family: 'Fira Code', monospace;
 }
 
+body {
+  user-select: none; /* prevent any text selection */
+}
+
 * {
   font-variant-ligatures: contextual;
   scrollbar-width: thin;
