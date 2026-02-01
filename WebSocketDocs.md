@@ -27,3 +27,15 @@ Example usage can be found [here](https://github.com/BrNi05/StepKeys/blob/main/g
 - Accepted values: booleans.
 
 Example usage can be found [here](https://github.com/BrNi05/StepKeys/blob/main/gui/src/components/TopBar.vue).
+
+## Pedal states
+
+**URL:** `/ws/pedals`
+
+**Method:** GET (upgrade to WebSocket)
+
+**Description:** Connect to receive real-time updates whenever the pedal map is updated.
+
+**Message format:** anything (on WS message, the client should use the API to fetch the new pedal map)
+
+Example usage can be found [here](https://github.com/BrNi05/StepKeys/blob/main/gui/src/components/PedalEditor.vue).
