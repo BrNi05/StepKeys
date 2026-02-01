@@ -1,7 +1,7 @@
 <template>
   <div class="p-3 border border-gray-700 rounded-lg flex flex-col gap-2 bg-gray-800">
     <div class="flex items-center gap-2">
-      <span class="font-semibold text-gray-100">Pedal {{ id }}</span>
+      <span class="font-semibold text-yellow-400">Pedal {{ id }}</span>
       <button
         class="ml-auto px-2 py-1 rounded border transition-colors duration-200 bg-red-900/10 border-red-500/50 text-red-400 hover:bg-red-900/20 hover:border-red-400 hover:text-red-300 text-xs"
         @click="$emit('remove')"
