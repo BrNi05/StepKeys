@@ -1,0 +1,26 @@
+<!-- Keep the title short, clear, and descriptive -->
+
+## Changes
+
+Briefly describe what and why you changed.
+
+## Related Issues
+
+Tag any issues that this PR solves. Eg.: Fixes #99
+
+## Testing
+
+Describe how you tested your changes.
+
+## Checklist
+
+- [ ] The added code is well-structured and follows best practices
+- [ ] The added code is documented (where needed)
+- [ ] No new issues are introduced
+- [ ] Local release script runs without any issues
+
+## Other Notes
+
+Anything else others should know that doesn’t fit the sections above.
+
+**Thank you for contributing to StepKeys!**

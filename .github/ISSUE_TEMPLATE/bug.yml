@@ -1,0 +1,71 @@
+name: Bug Report
+description: Report something that is not working (as it should)
+title: "[BUG] "
+labels: [bug]
+body:
+  - type: input
+    id: version
+    attributes:
+      label: StepKeys version
+      description: Select which (supported) version of StepKeys you are using
+      placeholder: "1.0.0"
+    validations:
+      required: true
+
+  - type: dropdown
+    id: affected
+    attributes:
+      label: Affected Component(s)
+      description: Select which component is affected
+      options:
+        - API or WebSockets (and related docs)
+        - webGUI
+        - Backend server
+        - CI (and GitHub related)
+        - Release process
+        - VS Code related
+        - Docs
+        - More of these
+        - Other
+    validations:
+      required: true
+
+  - type: textarea
+    id: description
+    attributes:
+      label: Describe the bug
+      description: A short but clear description of the issue. What happened and what was expected?
+    validations:
+      required: true
+
+  - type: textarea
+    id: reproduce_steps
+    attributes:
+      label: Steps to reproduce
+      description: A detailed list of steps to reproduce the bug
+    validations:
+      required: true
+
+  - type: textarea
+    id: logs
+    attributes:
+      label: Logs
+      description: Paste relevant server or browser logs here
+    validations:
+      required: true
+
+  - type: textarea
+    id: basic_environment
+    attributes:
+      label: Basic Environment
+      description: OS, browser, config, .env content, etc
+    validations:
+      required: true
+
+  - type: textarea
+    id: complex_environment
+    attributes:
+      label: Complex Environment
+      description: Pedal configuration, or (external) hardware details relevant to the bug
+    validations:
+      required: true
