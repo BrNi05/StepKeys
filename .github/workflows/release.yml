@@ -143,7 +143,7 @@ jobs:
         - name: Zip all binaries
           run: |
             cd build
-            zip -r stepkeys-${{ github.event.inputs.version }}.zip \
+            zip -j stepkeys-${{ github.event.inputs.version }}.zip \
               linux/* \
               macos/* \
               windows/*
