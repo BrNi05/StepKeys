@@ -52,7 +52,7 @@ body:
       label: Logs
       description: Paste relevant server or browser logs here
     validations:
-      required: true
+      required: false
 
   - type: textarea
     id: basic_environment
