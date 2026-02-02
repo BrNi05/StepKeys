@@ -2,9 +2,6 @@
 
 **StepKeys is a fully-featured, cross-platform pedal-based input system that maps physical footswitches to keyboard actions, sequences, and combos.**
 
-> [!WARNING]
-> StepKeys is currently in **beta** and may contain some minor bugs. Please keep this in mind when using it. If you encounter any issues, feel free to open an issue.
-
 ## Motivation
 
 Human interaction with computers is almost always limited to hands - keyboards, mice, MIDI controllers, touchscreens, etc. All follow the same paradigm. But interaction design shouldn’t follow hardware traditions - it should follow human capabilities.
@@ -150,8 +147,8 @@ StepKeys includes a built-in GUI that opens in your preferred browser.
 
 <br />
 
-<img width="1708" height="909" alt="image"
-     src="https://github.com/user-attachments/assets/f4f37408-413b-4767-9273-65f872c01457" />
+<img width="1708" height="909" alt="webGUI snippet"
+     src="https://github.com/user-attachments/assets/50c2ae58-6df0-4398-830e-0243c451dfa2" />
 
 <br />
 
@@ -185,7 +182,7 @@ This is an extremely useful feature of the webGUI. It displays all server logs t
 > The webGUI may sometimes log to browser console. These are not displayed here as such logs are supposed to be rare and technical.
 
 > [!TIP]
-> If you are unsure about the physical order of your pedals, just use the **Log Viewer**, as it will display all pedal actions in realtime.
+> If you are unsure about the physical order of your pedals, just use the **Log Viewer**, as it will display all pedal actions in realtime. You will need to enable StepKeys for this.
 
 ### Pedal Configurator
 
@@ -209,6 +206,11 @@ On a pedal card you can see its ID, a button to **remove** it from the configura
 
 There are quite a few assistive mechanisms in place. If you start typing a key, suggestions will appear. You can navigate with the **arrow keys** and accept the selected with **Space** or **Enter**. When no characters are typed, use **Backspace** to remove the last added key.
 
+> [!TIP]
+> You may notice that key repetition is not allowed in **combo** mode. While StepKeys can handle configurations with repeated keys, the GUI experience is more streamlined with this restriction in place. In **sequence** mode, repeated keys are allowed.
+
+Have a look at the [list of supported keys](https://github.com/go-vgo/robotgo/blob/master/docs/keys.md#keys) and the StepKeys [implementation](https://github.com/BrNi05/StepKeys/blob/main/server/pedal/supported_keys.go).
+
 > [!IMPORTANT]
 > StepKeys server tracks and knows about one config (profile). It does not natively include profile management. However, the webGUI has such feature. When saving a profile, the state of the webGUI is saved, which might not match the loaded profile (internal state).
 
@@ -223,7 +225,7 @@ For example, toggle operations handle errors silently, meaning a **HTTP200** res
 StepKeys enforces limitations of **RobotGo**, that is an amazing third party lib which interacts with the OS to press keys. The GUI will provide visual aid for supported keys, while API users can refer to the [official docs](https://github.com/go-vgo/robotgo/blob/master/docs/keys.md#keys) or the StepKeys [support list](https://github.com/BrNi05/StepKeys/blob/main/server/pedal/supported_keys.go).
 
 > [!TIP]
-For more complex operations, you may need to use the WebSockets provided by the StepKeys server. See the [documentation](https://github.com/BrNi05/StepKeys/blob/main/WebSocketDocs.md) for details.
+> For more complex operations, you may need to use the WebSockets provided by the StepKeys server. See the [documentation](https://github.com/BrNi05/StepKeys/blob/main/WebSocketDocs.md) for details.
 
 ## Technical notes
 
