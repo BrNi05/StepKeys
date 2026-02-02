@@ -50,7 +50,7 @@
         class="px-4 py-2 rounded-lg bg-blue-600 hover:bg-blue-500 text-white font-medium transition-colors"
         @click="addPedal"
       >
-        + Add Pedal
+        Add Pedal
       </button>
 
       <button
@@ -152,12 +152,7 @@
 
   // Save current pedal config to a JSON file
   const saveConfig = () => {
-    const dataToSave = {
-      profileName: profileName.value,
-      pedals: pedals.value,
-    };
-    const json = JSON.stringify(dataToSave, null, 2);
-
+    const json = JSON.stringify(pedals.value, null, 2);
     const blob = new Blob([json], { type: 'application/json' });
     const url = URL.createObjectURL(blob);
 
