@@ -105,6 +105,12 @@ else
     echo -e "\nUpdate mode: keeping existing .env configuration"
 fi
 
+# Linux permission warning
+if [ "$OS" == "Linux" ] && [ "$UPDATE" == false ]; then
+    echo -e "\nNote: On Linux, ensure your user has permission to access the serial port."
+    echo "You may need to add your user to the 'dialout' or 'uucp' group. See the StepKeys docs for details."
+fi
+
 # Start StepKeys
 echo -e "\nStarting StepKeys in the background..."
 nohup "$INSTALL_DIR/stepkeys" > "$INSTALL_DIR/stepkeys.log" 2>&1 &

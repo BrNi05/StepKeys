@@ -87,6 +87,11 @@ Use the installer scripts, which will guide you through the entire installation 
 
 ### Linux / macOS
 
+> [!IMPORTANT]
+> On Linux, depending on your distro, you may need to grant your user permission to access serial devices. Restart your device for changes to take effect.
+>
+> Use: `sudo usermod -aG dialout <username>` or `sudo usermod -aG uucp <username>`.
+
 ``` bash
 curl -fsSL https://raw.githubusercontent.com/BrNi05/StepKeys/main/release/posix.sh | bash
 ```
@@ -285,6 +290,11 @@ npm install # the GUI needs node and npm to be installed
 > Ubuntu: `sudo apt-get install -y pkg-config libayatana-appindicator3-dev`
 >
 > Some deprecation warnings may still appear during build or runtime, but these are expected and can safely be ignored.
+
+> [!IMPORTANT]
+> On Linux, depending on your distro, you may need to grant your user permission to access serial devices. Restart your device for changes to take effect.
+>
+> Use: `sudo usermod -aG dialout <username>` or `sudo usermod -aG uucp <username>`.
 
 ## Attributions
 
