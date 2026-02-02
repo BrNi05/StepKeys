@@ -244,6 +244,11 @@ func SetPedalMap(newMap PedalMap) {
 		Log.WriteToLogFile("Failed to save pedal config: " + err.Error())
 	}
 
+	// Disable StepKeys if the pedal map is now empty
+	if len(pedalMap) == 0 && IsEnabled() {
+		ToggleEnabled()
+	}
+
 	Log.WriteToLogFile("Pedal map updated and saved.")
 }
 
