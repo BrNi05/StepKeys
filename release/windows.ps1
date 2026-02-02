@@ -4,6 +4,7 @@ $ErrorActionPreference = "Stop"
 function Show-Error {
     param($message)
     Write-Host "ERROR: $message" -ForegroundColor Red
+    if (Test-Path $TMP_FILE) { Remove-Item $TMP_FILE -Force }
     Exit 1
 }
 
@@ -71,11 +72,15 @@ if (-not $UPDATE) {
 
     Write-Host "`nDetecting available serial devices..."
     $ports = Get-CimInstance Win32_SerialPort | Select-Object -ExpandProperty DeviceID
-    if (-not $ports) { $ports = "none" }
+    if (-not $ports) { $ports = "none found" }
     Write-Host "Available serial devices: $ports"
 
     $SERIAL_PORT = Read-Host "Enter the serial port to use (leave empty to skip)"
     $BAUD_RATE = Read-Host "Enter baud rate [default 115200]"
+
+    if ([string]::IsNullOrWhiteSpace($BAUD_RATE)) {
+        $BAUD_RATE = "115200"
+    }
 
     # Write .env
     # VERSION is auto-generated and is used for update checks
@@ -87,6 +92,21 @@ VERSION=$VERSION
 "@ | Out-File -FilePath $ENV_FILE -Encoding UTF8
 } else {
     Write-Host "`nUpdate mode: keeping existing .env configuration"
+
+    $ENV_FILE = "$INSTALL_DIR\.env"
+    if (Test-Path $ENV_FILE) {
+        $content = Get-Content $ENV_FILE
+
+        if ($content -match '^VERSION=') {
+            $content = $content -replace '^VERSION=.*', "VERSION=$VERSION" # update existing VERSION
+        } else {
+            $content += "VERSION=$VERSION"
+        }
+
+        $content | Set-Content -Path $ENV_FILE -Encoding UTF8
+    } else {
+        "VERSION=$VERSION" | Set-Content -Path $ENV_FILE -Encoding UTF8
+    }
 }
 
 # Start StepKeys

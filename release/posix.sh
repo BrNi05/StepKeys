@@ -3,7 +3,10 @@
 set -e
 set -o pipefail
 
-on_error() { echo "Script failed. Error on line: $1. Terminating..."; }
+on_error() {
+    echo "Script failed. Error on line: $1. Terminating...";
+    if [ -d "$TMP_DIR" ]; then rm -rf "$TMP_DIR"; fi
+}
 trap 'on_error $LINENO' ERR
 
 echo
@@ -86,7 +89,10 @@ if [[ "$UPDATE" == false ]]; then
 
     echo -e "\nDetecting available serial devices..."
     if [[ "$OS" == "Linux" ]]; then
-        DEVICES=$(ls /dev/ttyACM* 2>/dev/null || echo "none")
+        DEVICES=$(ls /dev/ttyACM* /dev/ttyUSB* 2>/dev/null)
+        if [[ "$DEVICES" == "/dev/ttyACM* /dev/ttyUSB*" ]]; then
+            DEVICES="none found"
+        fi
     elif [[ "$OS" == "Darwin" ]]; then
         DEVICES=$(ls /dev/cu.* 2>/dev/null || echo "none")
     fi
@@ -96,6 +102,8 @@ if [[ "$UPDATE" == false ]]; then
     read -rp "Enter the serial port to use (leave empty to skip): " SERIAL_PORT
     read -rp "Enter baud rate [default 115200]: " BAUD_RATE
 
+    BAUD_RATE=${BAUD_RATE:-115200}
+
     # Write .env
     ENV_FILE="$INSTALL_DIR/.env"
     echo "SERIAL_PORT=$SERIAL_PORT" > "$ENV_FILE"
@@ -103,6 +111,15 @@ if [[ "$UPDATE" == false ]]; then
     echo "VERSION=$VERSION" >> "$ENV_FILE" # auto-generated, used for update checks
 else
     echo -e "\nUpdate mode: keeping existing .env configuration"
+
+    ENV_FILE="$INSTALL_DIR/.env"
+    if [[ -f "$ENV_FILE" ]]; then
+        if grep -q "^VERSION=" "$ENV_FILE"; then
+            perl -pi -e "s|^VERSION=.*|VERSION=$VERSION|" "$ENV_FILE" # update existing VERSION
+        else
+            echo "VERSION=$VERSION" >> "$ENV_FILE"
+        fi
+    fi
 fi
 
 # Linux permission warning
