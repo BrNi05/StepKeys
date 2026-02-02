@@ -67,7 +67,6 @@ jobs:
         with:
           path: |
             ~/go/pkg/mod
-            ~/go/bin
           key: go-${{ runner.os }}-${{ hashFiles('**/go.sum') }}
           restore-keys: |
             go-${{ runner.os }}-
