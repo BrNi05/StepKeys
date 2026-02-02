@@ -1,5 +1,6 @@
 package pedal
 
+// Based on: https://github.com/go-vgo/robotgo/blob/master/docs/keys.md#keys
 var ValidKeys = map[string]struct{}{
 	// Editing / navigation
 	"backspace": {},

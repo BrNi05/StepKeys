@@ -14,7 +14,7 @@
       <div class="flex flex-col text-xs text-gray-400">
         <span class="mb-1">Mode</span>
         <select
-          v-model="model.mode"
+          v-model="pedalMode"
           class="bg-gray-700 rounded px-2 py-1 text-sm text-gray-100 outline-none border border-transparent focus:border-gray-600 cursor-pointer"
         >
           <option value="sequence">Sequence</option>
@@ -97,6 +97,25 @@
   const query = ref('');
   const highlightedIdx = ref(0);
   const scrollContainer = ref<HTMLElement | null>(null);
+  const isSequence = computed(() => model.value.mode === 'sequence');
+
+  // Pedal mode dropdown binding
+  const pedalMode = computed({
+    get: () => model.value.mode,
+    set: (newMode) => {
+      const oldMode = model.value.mode;
+      // Clear assigned keys when pedal mode changes
+      // Different modes are handled differently in terms of allowed key repetition
+      if (newMode !== oldMode) {
+        model.value = {
+          ...model.value,
+          mode: newMode,
+          keys: [],
+        };
+        query.value = '';
+      }
+    },
+  });
 
   // Compute suggestions based on current query and existing keys
   // Do not suggest (and allow) keys that are already assigned to this pedal
@@ -107,7 +126,7 @@
     const lowerInput = input.toLowerCase();
 
     return props.validKeys
-      .filter((k) => k.toLowerCase().startsWith(lowerInput) && !model.value.keys.includes(k))
+      .filter((k) => k.toLowerCase().startsWith(lowerInput) && (!model.value.keys.includes(k) || isSequence.value)) // sequence mode allows duplicates
       .sort((a, b) => {
         // Case-sensitive sorting matches
         const aStartsExact = a.startsWith(input);
@@ -163,7 +182,7 @@
   // Add (keyboard) key by assigning a new array with the new key appended
   const addKey = (keyName: string) => {
     const key = keyName.trim();
-    if (!key || !props.validKeys.includes(key) || model.value.keys.includes(key)) return;
+    if (!key || !props.validKeys.includes(key) || (model.value.keys.includes(key) && !isSequence.value)) return; // sequence mode allows duplicates
 
     model.value = { ...model.value, keys: [...model.value.keys, key] };
     query.value = '';

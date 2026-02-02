@@ -121,19 +121,36 @@ func releaseKeys(keys []string) {
 	}
 }
 
+// Oneshot behaviour helper
+func triggerKeys(action Pedal.PedalAction) {
+	switch action.Mode {
+	case Pedal.Sequence:
+		tapKeys(action.Keys)
+	case Pedal.Combo:
+		if len(action.Keys) == 0 {
+			return
+		}
+		mainKey := action.Keys[len(action.Keys)-1]
+		mods := action.Keys[:len(action.Keys)-1] // okay even if mods is empty
+		robotgo.KeyTap(mainKey, stringToAny(mods)...)
+	}
+}
+
 // Handle a raw pedal byte from Arduino
 func handlePedalByte(b byte) {
 	pedalID := int(b & 0x7F)   // Lower 7 bits: pedal ID (0-127)
-	pressed := (b & 0x80) != 0 // MSB: pressed/released
+	pressed := (b & 0x80) != 0 // MSB: pressed (1) / released (0)
+
+	event := map[bool]string{true: "pressed", false: "released"}[pressed]
+	action, ok := readPedalMap()[fmt.Sprintf("%d", pedalID)]
 
 	// Only handle pedal IDs defined in the config
-	action, ok := readPedalMap()[fmt.Sprintf("%d", pedalID)]
 	if !ok {
-		Log.WriteToLogFile(fmt.Sprintf("Received unknown pedal ID: %d", pedalID))
+		Log.WriteToLogFile(fmt.Sprintf("Received unknown pedal ID (%s): %d", event, pedalID))
 		return
-	} else {
-		Log.WriteToLogFile(fmt.Sprintf("Pedal %d %s", pedalID, map[bool]string{true: "pressed", false: "released"}[pressed]))
 	}
+
+	Log.WriteToLogFile(fmt.Sprintf("Pedal %d %s", pedalID, event))
 
 	switch action.Behaviour {
 	case Pedal.Oneshot:
@@ -170,21 +187,6 @@ func handlePedalByte(b byte) {
 	}
 }
 
-// Oneshot behaviour helper
-func triggerKeys(action Pedal.PedalAction) {
-	switch action.Mode {
-	case Pedal.Sequence:
-		tapKeys(action.Keys)
-	case Pedal.Combo:
-		if len(action.Keys) == 0 {
-			return
-		}
-		mainKey := action.Keys[len(action.Keys)-1]
-		mods := action.Keys[:len(action.Keys)-1]
-		robotgo.KeyTap(mainKey, stringToAny(mods)...)
-	}
-}
-
 // Open the serial port specified in the .env file
 // Returns nil if unable to open port
 func openSerialPort(baudRate int, serialPort string) (serial.Port, error) {
@@ -218,7 +220,7 @@ func ListenSerial(baudRate int, serialPort string) error {
 
 	for {
 		// Do not process events if disabled
-		// 500ms sleep to avoid high CPU usage
+		// 500ms sleep to avoid CPU spikes
 		if !readEnabled() {
 			port.ResetInputBuffer()
 			time.Sleep(500 * time.Millisecond)
