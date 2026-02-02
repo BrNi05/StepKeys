@@ -2,6 +2,11 @@ name: StepKeys Multi-Platform Build
 
 on:
   workflow_dispatch:
+    inputs:
+      version:
+        description: "Release version (e.g. 1.1.0)"
+        required: true
+        type: string
 
 jobs:
   build:
@@ -15,6 +20,18 @@ jobs:
     name: Build on ${{ matrix.os }}
 
     steps:
+      - name: Verify version syntax
+        run: |
+          VERSION="${{ github.event.inputs.version }}"
+
+          if [[ ! "$VERSION" =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
+            echo "Invalid version format. Expected: MAJOR.MINOR.PATCH"
+            exit 1
+          fi
+
+          echo "Version $VERSION is valid."
+        shell: bash
+
       - name: Checkout repo
         uses: actions/checkout@v6
         with:
@@ -77,24 +94,28 @@ jobs:
       - name: Build StepKeys
         working-directory: server
         run: |
-          VERSION=$(git describe --tags --abbrev=0 2>/dev/null || echo "dev")
-          VERSION=${VERSION#v}
+          VERSION="${{ github.event.inputs.version }}"
 
           mkdir -p ../build/bin
-          
+
           if [[ "${{ matrix.os }}" == "ubuntu-latest" ]]; then
-          go build -ldflags "-s -w" -o ../build/bin/stepkeys-linux-amd64-${VERSION}
+            PLATFORM="linux-amd64"
+            go build -ldflags "-s -w" -o ../build/bin/stepkeys-${PLATFORM}-${VERSION}
           elif [[ "${{ matrix.os }}" == "macos-latest" ]]; then
-          go build -ldflags "-s -w" -o ../build/bin/stepkeys-macos-arm64-${VERSION}
+            PLATFORM="macos-arm64"
+            go build -ldflags "-s -w" -o ../build/bin/stepkeys-${PLATFORM}-${VERSION}
           elif [[ "${{ matrix.os }}" == "windows-latest" ]]; then
-          go build -ldflags "-s -w" -o ../build/bin/stepkeys-windows-amd64-${VERSION}.exe
+            PLATFORM="windows-amd64"
+            go build -ldflags "-s -w" -o ../build/bin/stepkeys-${PLATFORM}-${VERSION}.exe
           fi
+
+          echo "PLATFORM=$PLATFORM" >> $GITHUB_ENV
         shell: bash
 
       - name: Upload binaries
         uses: actions/upload-artifact@v6
         with:
-          name: stepkeys-${{ matrix.os }}
+          name: stepkeys-${{ env.PLATFORM }}-${{ github.event.inputs.version }}
           path: build/bin/*
 
   package:
@@ -102,32 +123,35 @@ jobs:
       runs-on: ubuntu-latest
       name: Package all binaries
       steps:
-        - name: Download Linux binaries
+        - name: Download Linux binary
           uses: actions/download-artifact@v7
           with:
-            name: stepkeys-ubuntu-latest
+            name: stepkeys-linux-amd64-${{ github.event.inputs.version }}
             path: build/linux
 
-        - name: Download macOS binaries
+        - name: Download macOS binary
           uses: actions/download-artifact@v7
           with:
-            name: stepkeys-macos-latest
+            name: stepkeys-macos-arm64-${{ github.event.inputs.version }}
             path: build/macos
 
-        - name: Download Windows binaries
+        - name: Download Windows binary
           uses: actions/download-artifact@v7
           with:
-            name: stepkeys-windows-latest
+            name: stepkeys-windows-amd64-${{ github.event.inputs.version }}
             path: build/windows
 
         - name: Zip all binaries
           run: |
             cd build
-            zip -r stepkeys-all.zip linux/* macos/* windows/*
+            zip -r stepkeys-${{ github.event.inputs.version }}.zip \
+              linux/* \
+              macos/* \
+              windows/*
           shell: bash
 
         - name: Upload combined zip
           uses: actions/upload-artifact@v6
           with:
-            name: stepkeys-all
-            path: build/stepkeys-all.zip
+            name: stepkeys-${{ github.event.inputs.version }}
+            path: build/stepkeys-${{ github.event.inputs.version }}.zip
