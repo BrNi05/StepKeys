@@ -93,7 +93,7 @@ Use the installer scripts, which will guide you through the entire installation 
 > Use: `sudo usermod -aG dialout <username>` or `sudo usermod -aG uucp <username>`.
 
 ``` bash
-curl -fsSL https://raw.githubusercontent.com/BrNi05/StepKeys/main/release/posix.sh | bash
+bash <(curl -sL https://raw.githubusercontent.com/BrNi05/StepKeys/main/release/posix.sh)
 ```
 
 ### Windows
@@ -109,7 +109,7 @@ StepKeys includes a built-in version manager and will notify you whenever an upd
 ### Linux / macOS
 
 ``` bash
-curl -fsSL https://raw.githubusercontent.com/BrNi05/StepKeys/main/release/posix.sh | bash -s update
+bash <(curl -sL https://raw.githubusercontent.com/BrNi05/StepKeys/main/release/posix.sh) update
 ```
 
 ### Windows
