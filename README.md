@@ -99,7 +99,7 @@ bash <(curl -sL https://raw.githubusercontent.com/BrNi05/StepKeys/main/release/p
 ### Windows
 
 ``` bash
-iwr -useb https://raw.githubusercontent.com/BrNi05/StepKeys/main/release/windows.ps1 | iex
+irm -useb https://raw.githubusercontent.com/BrNi05/StepKeys/main/release/windows.ps1 | iex
 ```
 
 > [!TIP]
@@ -126,7 +126,7 @@ bash <(curl -sL https://raw.githubusercontent.com/BrNi05/StepKeys/main/release/p
 ### Windows
 
 ``` bash
-iwr -useb https://raw.githubusercontent.com/BrNi05/StepKeys/main/release/windows.ps1 | iex -args update
+& ([scriptblock]::Create((irm https://raw.githubusercontent.com/BrNi05/StepKeys/main/release/windows.ps1))) update
 ```
 
 ## How to use StepKeys
