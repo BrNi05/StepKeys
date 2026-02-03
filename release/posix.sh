@@ -88,17 +88,27 @@ if [[ "$UPDATE" == false ]]; then
     echo -e "\nSetting up configuration (.env)..."
 
     echo -e "\nDetecting available serial devices..."
+
     if [[ "$OS" == "Linux" ]]; then
-        DEVICES=$(ls /dev/ttyACM* /dev/ttyUSB* 2>/dev/null)
-        if [[ "$DEVICES" == "/dev/ttyACM* /dev/ttyUSB*" ]]; then
-            DEVICES="none found"
-        fi
+        shopt -s nullglob
+        DEV_ARR=(/dev/ttyACM* /dev/ttyUSB*)
+        shopt -u nullglob
+
     elif [[ "$OS" == "Darwin" ]]; then
-        DEVICES=$(ls /dev/cu.* 2>/dev/null || echo "none")
+        shopt -s nullglob
+        DEV_ARR=(/dev/cu.*)
+        shopt -u nullglob
+    fi
+
+    if (( ${#DEV_ARR[@]} == 0 )); then
+        DEVICES="none found"
+    else
+        DEVICES="${DEV_ARR[*]}"
     fi
 
     echo "Available serial devices: $DEVICES"
 
+    echo
     read -rp "Enter the serial port to use (leave empty to skip): " SERIAL_PORT
     read -rp "Enter baud rate [default 115200]: " BAUD_RATE
 

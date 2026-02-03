@@ -75,6 +75,7 @@ if (-not $UPDATE) {
     if (-not $ports) { $ports = "none found" }
     Write-Host "Available serial devices: $ports"
 
+    Write-Host ""
     $SERIAL_PORT = Read-Host "Enter the serial port to use (leave empty to skip)"
     $BAUD_RATE = Read-Host "Enter baud rate [default 115200]"
 
