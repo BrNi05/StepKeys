@@ -102,6 +102,17 @@ bash <(curl -sL https://raw.githubusercontent.com/BrNi05/StepKeys/main/release/p
 iwr -useb https://raw.githubusercontent.com/BrNi05/StepKeys/main/release/windows.ps1 | iex
 ```
 
+> [!TIP]
+> During installation, you will be prompted to select the serial device to be used by StepKeys. The installer will list all detected serial devices.
+>
+> If you are unsure which one to choose:
+>  
+> On Windows, open **Device Manager** and look for entries like **USB Serial Device (COMX)** under **Ports (COM & LPT)**.
+>
+> On POSIX systems, you can identify devices using platform-specific tools. On Linux, use **udevadm** to inspect `/dev/ttyACM*` or `/dev/ttyUSB*` devices. On macOS, use **ioreg** to inspect `/dev/cu.usbmodem*` or `/dev/cu.usbserial*`.
+>
+> Alternatively, the **Arduino Cloud Agent** together with the **Arduino Cloud Editor** can be used to identify connected Arduino devices.
+
 ## How to update StepKeys
 
 StepKeys includes a built-in version manager and will notify you whenever an update is available. You will be redirected to the release page, where you will find links to this section of the README.
@@ -269,9 +280,13 @@ go get github.com/gorilla/websocket
 
 go mod tidy
 
+go env -w CGO_ENABLED=1
+
 cd gui
 npm install # the GUI needs node and npm to be installed
 ```
+
+**Robotgo** needs `gcc` to work. On Windows, use MSYS2. On POSIX, use your preferred package manager to install it.
 
 > [!IMPORTANT]
 > Restart VSC or your terminal session for changes to take effect.
