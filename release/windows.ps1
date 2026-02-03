@@ -66,7 +66,21 @@ Invoke-WebRequest -Uri $DOWNLOAD_URL -OutFile $TMP_FILE
 Move-Item -Path $TMP_FILE -Destination "$INSTALL_DIR\stepkeys.exe" -Force
 Write-Host "`nStepKeys installed to $INSTALL_DIR"
 
+# Helper: BOM-free UTF-8 write to disk
+# Out-File and Set-Content writes BOM and .env parsing by godotenv fails
+function Write-EnvFile {
+    param(
+        [string]$Path,
+        [string[]]$Lines
+    )
+
+    $Utf8NoBomEncoding = New-Object System.Text.UTF8Encoding $False
+    [IO.File]::WriteAllLines($Path, $Lines, $Utf8NoBomEncoding)
+}
+
 # dotenv setup
+$ENV_FILE = "$INSTALL_DIR\.env"
+
 if (-not $UPDATE) {
     Write-Host "`nSetting up configuration (.env)..."
 
@@ -83,30 +97,36 @@ if (-not $UPDATE) {
         $BAUD_RATE = "115200"
     }
 
-    # Write .env
     # VERSION is auto-generated and is used for update checks
-    $ENV_FILE = "$INSTALL_DIR\.env"
-    @"
-SERIAL_PORT=$SERIAL_PORT
-BAUD_RATE=$BAUD_RATE
-VERSION=$VERSION
-"@ | Out-File -FilePath $ENV_FILE -Encoding UTF8
+    $lines = @(
+        "SERIAL_PORT=$SERIAL_PORT"
+        "BAUD_RATE=$BAUD_RATE"
+        "VERSION=$VERSION"
+    )
+
+    Write-EnvFile -Path $ENV_FILE -Lines $lines
 } else {
     Write-Host "`nUpdate mode: keeping existing .env configuration"
 
-    $ENV_FILE = "$INSTALL_DIR\.env"
     if (Test-Path $ENV_FILE) {
-        $content = Get-Content $ENV_FILE
+        $content = Get-Content $ENV_FILE -Raw
+        $lines = $content -split "`r?`n"
 
-        if ($content -match '^VERSION=') {
-            $content = $content -replace '^VERSION=.*', "VERSION=$VERSION" # update existing VERSION
-        } else {
-            $content += "VERSION=$VERSION"
+        $foundVersion = $false
+        for ($i = 0; $i -lt $lines.Length; $i++) {
+            if ($lines[$i] -match '^VERSION=') {
+                $lines[$i] = "VERSION=$VERSION" # overwrite version
+                $foundVersion = $true
+                break
+            }
+        }
+        if (-not $foundVersion) {
+            $lines += "VERSION=$VERSION"
         }
 
-        $content | Set-Content -Path $ENV_FILE -Encoding UTF8
+        Write-EnvFile -Path $ENV_FILE -Lines $lines
     } else {
-        "VERSION=$VERSION" | Set-Content -Path $ENV_FILE -Encoding UTF8
+        Write-EnvFile -Path $ENV_FILE -Lines @("VERSION=$VERSION")
     }
 }
 
