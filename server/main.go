@@ -23,7 +23,7 @@ func main() {
 	OS.InterceptShutdown()
 
 	// Load .env or use defaults
-	baudRate, serialPort := Config.LoadEnv()
+	baudRate, serialPort := Config.LoadEnv(execDir)
 
 	// Load app and pedal map config
 	Config.LoadConfig()

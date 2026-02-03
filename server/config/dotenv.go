@@ -2,6 +2,7 @@ package config
 
 import (
 	"os"
+	"path/filepath"
 	"runtime"
 	"strconv"
 
@@ -14,10 +15,10 @@ var _serialPort string
 var baudRate int
 var appVersion string
 
-func LoadEnv() (baudRate int, serialPort string) {
+func LoadEnv(execDir string) (baudRate int, serialPort string) {
 	// Load .env file
 	// Ignore error if missing
-	_ = godotenv.Load(".env")
+	_ = godotenv.Load(filepath.Join(execDir, ".env")) // always load from executable dir
 	Log.WriteToLogFile("Environment file loaded.")
 
 	// SERIAL_PORT
