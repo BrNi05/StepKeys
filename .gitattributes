@@ -41,3 +41,7 @@ go.sum text eol=lf
 
 // Vue files
 *.vue text eol=lf
+
+// Scripts
+*.sh text eol=lf
+*.ps1 text eol=lf
