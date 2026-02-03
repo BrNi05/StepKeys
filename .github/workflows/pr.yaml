@@ -1,0 +1,65 @@
+name: StepKeys PR Check
+
+on:
+  pull_request:
+    branches:
+      - main
+    paths:
+      - 'server/**'
+      - 'gui/**'
+      - '.github/workflows/**'
+      - 'go.mod'
+      - 'go.sum'
+    types: [opened, synchronize, reopened]
+
+jobs:
+  pr-check:
+    runs-on: macos-latest
+    name: PR Check
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v6
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version: 24
+
+      - name: Setup Go
+        uses: actions/setup-go@v6
+        with:
+          go-version: "1.25.6"
+
+      - name: Build GUI
+        working-directory: gui
+        run: |
+          npm ci --silent
+          npm run lint
+          npm run build
+        shell: bash
+
+      - name: Copy GUI to server
+        run: |
+          rm -rf server/web/gui
+          mkdir -p server/web/gui
+          cp -r gui/dist/* server/web/gui/
+        shell: bash
+
+      - name: Install swag CLI
+        working-directory: server
+        run: go install github.com/swaggo/swag/cmd/swag@latest
+        shell: bash
+
+      - name: Generate Swagger docs
+        working-directory: server
+        run: swag init --generalInfo main.go --output ./docs
+        shell: bash
+
+      - name: Build StepKeys server
+        working-directory: server
+        run: |
+          mkdir -p ../build/bin
+          VERSION="pr-check"
+          PLATFORM="macos-arm64"
+          go build -ldflags "-s -w" -o ../build/bin/stepkeys-${PLATFORM}-${VERSION}
+        shell: bash
