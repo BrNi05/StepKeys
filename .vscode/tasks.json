@@ -38,9 +38,22 @@
       "detail": "Generates API docs using swag."
     },
     {
-      "label": "Build StepKeys",
+      "label": "Build StepKeys (POSIX)",
       "type": "shell",
       "command": "go build -o ./server/stepkeys ./server",
+      "args": [],
+      "group": {
+        "kind": "build",
+        "isDefault": false
+      },
+      "problemMatcher": ["$go"],
+      "dependsOn": ["Generate Swagger Docs"],
+      "detail": "Builds the StepKeys server app. Regenerates API docs before building.",
+    },
+    {
+      "label": "Build StepKeys (Win)",
+      "type": "shell",
+      "command": "go build -o ./server/stepkeys.exe ./server",
       "args": [],
       "group": {
         "kind": "build",
@@ -56,7 +69,7 @@
       "command": "./stepkeys",
       "group": "none",
       "problemMatcher": ["$go"],
-      "dependsOn": ["Build StepKeys"],
+      "dependsOn": ["Build StepKeys (POSIX)"],
       "options": {
         "cwd": "${workspaceFolder}/server"
       },
@@ -68,7 +81,7 @@
       "command": "./stepkeys.exe",
       "group": "none",
       "problemMatcher": ["$go"],
-      "dependsOn": ["Build StepKeys"],
+      "dependsOn": ["Build StepKeys (Win)"],
       "options": {
         "cwd": "${workspaceFolder}/server"
       },
