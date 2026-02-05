@@ -85,6 +85,9 @@ StepKeys is designed in a way that the (external) hardware can be easily replace
 
 Use the installer scripts, which will guide you through the entire installation and setup process.
 
+> [!TIP]
+> StepKeys only acts on explicit user instructions. After installation, open the webGUI and enable StepKeys to start on boot. You’re also encouraged to check the logs to ensure StepKeys did not encounter any errors during startup.
+
 ### Linux / macOS
 
 > [!IMPORTANT]
@@ -223,7 +226,7 @@ On a pedal card you can see its ID, a button to **remove** it from the configura
 There are quite a few assistive mechanisms in place. If you start typing a key, suggestions will appear. You can navigate with the **arrow keys** and accept the selected with **Space** or **Enter**. When no characters are typed, use **Backspace** to remove the last added key.
 
 > [!TIP]
-> You may notice that key repetition is not allowed in **combo** mode. While StepKeys can handle configurations with repeated keys, the GUI experience is more streamlined with this restriction in place. In **sequence** mode, repeated keys are allowed.
+> You may notice that key repetition is not allowed in **combo** mode. While StepKeys can handle configurations with repeated keys, the GUI experience is more streamlined with this restriction in place. In **sequence** mode, repeated keys are allowed. For key combinations, it’s generally recommended to use lowercase letters, though uppercase letters mostly work as well.
 
 Have a look at the [list of supported keys](https://github.com/go-vgo/robotgo/blob/master/docs/keys.md#keys) and the StepKeys [implementation](https://github.com/BrNi05/StepKeys/blob/main/server/pedal/supported_keys.go).
 
@@ -248,6 +251,9 @@ StepKeys enforces limitations of **RobotGo**, that is an amazing third party lib
 StepKeys logs with moderate verbosity and handles most runtime errors. It assumes the user is familiar with the app and does NOT guard against deliberate misuse.
 
 StepKeys behaves differently from other programs regarding its lifecycle. It always exits with code 0, even if execution is halted due to a handled error. During app startup, the shutdown process can be fragile for a few milliseconds, since it depends on the system tray, which may not yet be initialized. However, given StepKeys’ small scope and the testing that has been performed, such issues are expected to be extremely rare.
+
+> [!IMPORTANT]
+> On Linux (Wayland), the first input may trigger a permission prompt. This is a security feature. Approve it to allow StepKeys to send keyboard input. X11 sessions are unaffected. Permissions are session-scoped.
 
 ## Set up project
 
