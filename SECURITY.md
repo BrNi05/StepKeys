@@ -2,13 +2,15 @@
 
 StepKeys is a locally running daemon that cannot be accessed remotely, so it does not present an attack surface. While it poses virtually no risk from external threats, like any software it could contain bugs that may affect system stability or behavior. Because StepKeys interacts closely with the operating system and your browser, maintaining its security and reliability is important.
 
+Additionally, StepKeys does not run as **root** or with administrator privileges on Windows, further reducing potential risks.
+
 ## Supported Versions
 
 Older versions of StepKeys will generally become unsupported when a new (non-patch) release is published. Support is typically provided for the latest minor version. In the event of a breaking change, the previous minor version might also receive temporary support limited to security updates.
 
 | Version |     Supported      | End of Life |
 | :-----: | :----------------: | :---------: |
-|  1.0.0  | :white_check_mark: |  in 1.1.0   |
+|  1.0.0  | :white_check_mark: |    1.1.0    |
 
 ## Reporting a Vulnerability
 
@@ -18,7 +20,7 @@ If you discover a vulnerability, please report it as a regular bug. For severe v
 
 - Vulnerabilities affecting **unsupported versions** of StepKeys
 
-- Dependency vulnerabilities — Dependabot already checks dependencies to ensure secure builds.
+- Dependency vulnerabilities — Dependabot already checks dependencies to ensure secure builds
 
 ## Response and solution
 
