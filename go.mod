@@ -4,12 +4,11 @@ go 1.25.6
 
 require (
 	github.com/getlantern/systray v1.2.2
-	github.com/go-vgo/robotgo v1.0.0
+	github.com/go-vgo/robotgo v1.0.1
 	github.com/gorilla/websocket v1.5.3
 	github.com/joho/godotenv v1.5.1
 	github.com/pkg/browser v0.0.0-20240102092130-5ac0b6a4141c
 	github.com/swaggo/http-swagger v1.3.4
-	github.com/swaggo/swag v1.16.6
 	go.bug.st/serial v1.6.4
 )
 
@@ -43,6 +42,7 @@ require (
 	github.com/robotn/xgbutil v0.10.0 // indirect
 	github.com/shirou/gopsutil/v4 v4.25.10 // indirect
 	github.com/swaggo/files v0.0.0-20220610200504-28940afbdbfe // indirect
+	github.com/swaggo/swag v1.16.6 // indirect
 	github.com/tailscale/win v0.0.0-20250627215312-f4da2b8ee071 // indirect
 	github.com/tklauser/go-sysconf v0.3.16 // indirect
 	github.com/tklauser/numcpus v0.11.0 // indirect
