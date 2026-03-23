@@ -12,6 +12,9 @@ on:
       - 'go.sum'
     types: [opened, synchronize, reopened]
 
+permissions:
+  contents: read
+
 jobs:
   pr-check:
     runs-on: macos-latest
