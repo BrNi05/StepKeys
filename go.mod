@@ -9,6 +9,7 @@ require (
 	github.com/joho/godotenv v1.5.1
 	github.com/pkg/browser v0.0.0-20240102092130-5ac0b6a4141c
 	github.com/swaggo/http-swagger v1.3.4
+	github.com/swaggo/swag v1.16.6
 	go.bug.st/serial v1.6.4
 )
 
@@ -41,7 +42,6 @@ require (
 	github.com/power-devops/perfstat v0.0.0-20240221224432-82ca36839d55 // indirect
 	github.com/shirou/gopsutil/v4 v4.26.2 // indirect
 	github.com/swaggo/files v0.0.0-20220610200504-28940afbdbfe // indirect
-	github.com/swaggo/swag v1.16.6 // indirect
 	github.com/tailscale/win v0.0.0-20250627215312-f4da2b8ee071 // indirect
 	github.com/tklauser/go-sysconf v0.3.16 // indirect
 	github.com/tklauser/numcpus v0.11.0 // indirect
