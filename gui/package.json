@@ -11,7 +11,7 @@
   },
   "dependencies": {
     "@unocss/preset-wind3": "^66.6.7",
-    "axios": "^1.13.6",
+    "axios": "^1.15.0",
     "typeface-fira-code": "^1.1.13",
     "vue": "^3.5.31"
   },
