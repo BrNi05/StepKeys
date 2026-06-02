@@ -9,13 +9,11 @@ require (
 	github.com/joho/godotenv v1.5.1
 	github.com/pkg/browser v0.0.0-20240102092130-5ac0b6a4141c
 	github.com/swaggo/http-swagger v1.3.4
-	github.com/swaggo/swag v1.16.6
-	go.bug.st/serial v1.6.4
+	go.bug.st/serial v1.7.1
 )
 
 require (
 	github.com/KyleBanks/depth v1.2.1 // indirect
-	github.com/creack/goselect v0.1.2 // indirect
 	github.com/dblohm7/wingoes v0.0.0-20250822163801-6d8e6105c62d // indirect
 	github.com/ebitengine/purego v0.10.0 // indirect
 	github.com/gen2brain/shm v0.2.1 // indirect
@@ -42,6 +40,7 @@ require (
 	github.com/power-devops/perfstat v0.0.0-20240221224432-82ca36839d55 // indirect
 	github.com/shirou/gopsutil/v4 v4.26.2 // indirect
 	github.com/swaggo/files v0.0.0-20220610200504-28940afbdbfe // indirect
+	github.com/swaggo/swag v1.16.6 // indirect
 	github.com/tailscale/win v0.0.0-20250627215312-f4da2b8ee071 // indirect
 	github.com/tklauser/go-sysconf v0.3.16 // indirect
 	github.com/tklauser/numcpus v0.11.0 // indirect
@@ -56,7 +55,7 @@ require (
 	golang.org/x/mod v0.34.0 // indirect
 	golang.org/x/net v0.52.0 // indirect
 	golang.org/x/sync v0.20.0 // indirect
-	golang.org/x/sys v0.42.0 // indirect
+	golang.org/x/sys v0.43.0 // indirect
 	golang.org/x/tools v0.43.0 // indirect
 	gopkg.in/yaml.v2 v2.4.0 // indirect
 )
